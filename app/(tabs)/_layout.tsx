@@ -1,35 +1,39 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
+import { Tabs, usePathname } from "expo-router";
 
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+export default function RootLayout() {
+  const pathName = usePathname();
+  console.log(pathName);
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  // эффект на случай если нужно проверить на какой вкладке находиться пользователь
+  // useEffect(() => {
+  //   alert(pathName);
+  // }, [pathName]);
+
+  const isHomeGroupScreens =
+    pathName.includes("home") ||
+    pathName.includes("locations") ||
+    pathName.includes("themes");
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-      }}>
+    <Tabs screenOptions={{ headerShown: false }}>
+      <Tabs.Screen name="map" options={{ title: "Map" }} />
+
       <Tabs.Screen
-        name="index"
+        name="themes"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: "Theme",
+          tabBarButton: isHomeGroupScreens ? undefined : () => null,
         }}
       />
+      <Tabs.Screen name="home" options={{ title: "Home" }} />
       <Tabs.Screen
-        name="explore"
+        name="locations"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: "Locations",
+          tabBarButton: isHomeGroupScreens ? undefined : () => null,
         }}
       />
+      <Tabs.Screen name="tools" options={{ title: "Tools" }} />
     </Tabs>
   );
 }
