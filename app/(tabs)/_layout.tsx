@@ -21,7 +21,7 @@ export default function RootLayout() {
       <Tabs.Screen
         name="themes"
         options={{
-          title: "Theme",
+          title: "Themes",
           tabBarButton: isHomeGroupScreens ? undefined : () => null,
         }}
       />

@@ -1,3 +1,4 @@
+import Background from "@/src/components/Background";
 import {
   Keyboard,
   StyleSheet,
@@ -7,14 +8,13 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
+import Header from "../../src/components/Header";
 import { Colors } from "../../src/theme";
 
 export default function HomeScreen() {
   return (
-    <View style={styles.background}>
-      <View style={styles.header}>
-        <Text style={styles.label}>TravelGO</Text>
-      </View>
+    <Background>
+      <Header text={"TravelGo"} />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.formContainer}>
           <View style={styles.formWrapper}>
@@ -59,7 +59,7 @@ export default function HomeScreen() {
           </View>
         </View>
       </TouchableWithoutFeedback>
-    </View>
+    </Background>
   );
 }
 
@@ -82,29 +82,12 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     flexDirection: "column",
-    paddingTop: 150,
+    marginTop: 110,
   },
 
   formText: {
     color: "white",
     fontSize: 30,
-  },
-
-  header: {
-    width: "100%",
-    height: 100,
-    backgroundColor: Colors.primary,
-    position: "absolute",
-    zIndex: 1,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  label: {
-    color: "white",
-    fontSize: 30,
-    zIndex: 2,
   },
 
   inputs: {
