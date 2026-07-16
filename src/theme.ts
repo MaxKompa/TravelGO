@@ -5,5 +5,6 @@ export const Colors = {
   background: "#C5CEDF",
   secondary: "#AFCDF1",
   primary2: "#18325B",
-  primary: "#336AC1",
+  primary: "#3369c1",
+  primaryBlured: "#3369c150",
 };

@@ -71,18 +71,20 @@ const styles = StyleSheet.create({
 
   formContainer: {
     width: "100%",
-    height: "95%",
+    height: "89%",
     backgroundColor: Colors.primary2,
     borderRadius: 34,
+    borderTopStartRadius: 0,
+    borderTopEndRadius: 0,
   },
 
   formWrapper: {
     width: "100%",
-    height: "75%",
+    height: "70%",
     display: "flex",
     alignItems: "center",
     flexDirection: "column",
-    marginTop: 110,
+    marginTop: 120,
   },
 
   formText: {

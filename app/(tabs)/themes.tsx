@@ -8,7 +8,7 @@ export default function Themes() {
     <Background>
       <Header text="Themes" />
       <View style={styles.wrapper}>
-        <View style={[styles.themeRow, { marginTop: 145 }]}>
+        <View style={[styles.themeRow, { marginTop: 120 }]}>
           <ThemeCard text={"Food"} width={351} />
         </View>
         <View style={styles.themeRow}>
