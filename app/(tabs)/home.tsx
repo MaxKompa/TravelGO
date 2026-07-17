@@ -54,7 +54,9 @@ export default function HomeScreen() {
               </View>
             </View>
             <TouchableOpacity style={styles.button}>
-              <Text>Choose Themes</Text>
+              <Text style={{ fontFamily: "PatrickHand-Regular", fontSize: 21 }}>
+                Choose Themes
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -71,7 +73,7 @@ const styles = StyleSheet.create({
 
   formContainer: {
     width: "100%",
-    height: "89%",
+    height: "87%",
     backgroundColor: Colors.primary2,
     borderRadius: 34,
     borderTopStartRadius: 0,
@@ -89,7 +91,8 @@ const styles = StyleSheet.create({
 
   formText: {
     color: "white",
-    fontSize: 30,
+    fontSize: 33,
+    fontFamily: "PatrickHand-Regular",
   },
 
   inputs: {
@@ -138,7 +141,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     display: "flex",
     alignItems: "center",
-    padding: 10,
-    marginTop: 50,
+    padding: 5,
+    marginTop: 30,
+    justifyContent: "center",
   },
 });

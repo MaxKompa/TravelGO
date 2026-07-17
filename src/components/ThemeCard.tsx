@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
   },
 
   cardText: {
-    fontSize: 20,
+    fontSize: 25,
+    fontFamily: "PatrickHand-Regular",
   },
 });

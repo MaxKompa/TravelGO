@@ -34,17 +34,17 @@ export default function RootLayout() {
         tabBarStyle: styles.navBackground,
         tabBarActiveTintColor: iconConfig.ActiveTintColor,
         tabBarInactiveTintColor: iconConfig.InactiveTintColor,
+
         tabBarBackground: () => (
           <BlurView
-            intensity={40}
-            tint="light"
-            experimentalBlurMethod="dimezisBlurView"
+            intensity={95}
+            tint="default"
             style={StyleSheet.absoluteFill}
           >
             <View
               style={[
                 {
-                  backgroundColor: "#0a5ee62c",
+                  backgroundColor: "#004fce69",
                   borderRadius: 20,
                 },
                 StyleSheet.absoluteFill,
@@ -160,5 +160,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     margin: 10,
     overflow: "hidden",
+    backgroundColor: "transparent",
+    borderTopWidth: 0,
+    borderWidth: 0,
+    elevation: 0,
   },
 });

@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
     textShadowColor: "black",
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 1,
+    fontFamily: "Agbalumo-Regular",
   },
 
   separator: {
@@ -108,11 +109,13 @@ const styles = StyleSheet.create({
     margin: 5,
     color: "white",
     textAlign: "center",
+    fontFamily: "Agbalumo-Regular",
   },
 
   timeText: {
-    fontSize: 12,
+    fontSize: 10,
     color: "white",
+    fontFamily: "Agbalumo-Regular",
   },
 
   imageWrapper: {

@@ -1,4 +1,3 @@
-import { BlurView } from "expo-blur";
 import { StyleSheet, Text, View } from "react-native";
 import { HeaderProps } from "../../src/types";
 import { Colors } from "../theme";
@@ -6,12 +5,6 @@ import { Colors } from "../theme";
 export default function Header({ text }: HeaderProps) {
   return (
     <View style={styles.headerWrapper}>
-      <BlurView
-        intensity={65}
-        tint="default"
-        experimentalBlurMethod="dimezisBlurView"
-        style={StyleSheet.absoluteFill}
-      />
       <View style={styles.headerContent}>
         <Text style={styles.label}>{text}</Text>
       </View>
@@ -32,8 +25,8 @@ const styles = StyleSheet.create({
   },
 
   headerContent: {
-    backgroundColor: Colors.primaryBlured,
-    height: 80,
+    backgroundColor: Colors.primary,
+    height: 75,
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
@@ -42,8 +35,8 @@ const styles = StyleSheet.create({
 
   label: {
     color: "white",
-    fontSize: 30,
+    fontSize: 25,
     zIndex: 2,
-    fontWeight: "bold",
+    fontFamily: "Merienda-Bold",
   },
 });
