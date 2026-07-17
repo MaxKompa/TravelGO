@@ -1,3 +1,5 @@
+import { ImageSourcePropType } from "react-native";
+
 export type HeaderProps = {
   text: string;
 };
@@ -9,6 +11,7 @@ export type BackgroundProps = {
 export type ThemeCardProps = {
   text: string;
   width: number;
+  image: ImageSourcePropType;
 };
 
 export type LocationCardProps = {
