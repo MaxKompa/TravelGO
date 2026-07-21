@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
 
   imageWrapper: {
     width: "48%",
-    backgroundColor: "red",
+    backgroundColor: Colors.background,
     borderRadius: 20,
     marginLeft: 3,
     justifyContent: "center",

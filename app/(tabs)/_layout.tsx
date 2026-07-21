@@ -1,20 +1,22 @@
+import AnimatedTabIcon from "@/src/components/AnimatedTabIcon";
+import { TAB_SCREEN_CONFIG } from "@/src/types";
 import { BlurView } from "expo-blur";
-import { Tabs, usePathname } from "expo-router";
-import { StyleSheet, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { Tabs } from "expo-router";
+import { StyleSheet } from "react-native";
+import { createAnimatedComponent } from "react-native-reanimated";
 import HomeIcon from "../../src/assets/icons/HomeIcon.svg";
 import LocIcon from "../../src/assets/icons/LocIcon.svg";
 import MapIcon from "../../src/assets/icons/MapIcon.svg";
 import ThemesIcon from "../../src/assets/icons/ThemesIcon.svg";
 import ToolsIcon from "../../src/assets/icons/ToolsIcon.svg";
+const animatedHomeIcon = createAnimatedComponent(HomeIcon);
+const animatedLocIcon = createAnimatedComponent(LocIcon);
+const animatedMapIcon = createAnimatedComponent(MapIcon);
+const animatedThemesIcon = createAnimatedComponent(ThemesIcon);
+const animatedToolsIcon = createAnimatedComponent(ToolsIcon);
 
 export default function RootLayout() {
-  const pathName = usePathname();
-  console.log(pathName);
-
-  // эффект на случай если нужно проверить на какой вкладке находиться пользователь
-  // useEffect(() => {
-  //   alert(pathName);
-  // }, [pathName]);
   const iconConfig = {
     width: 20,
     height: 20,
@@ -22,10 +24,13 @@ export default function RootLayout() {
     InactiveTintColor: "#EAEAEA",
   };
 
-  const isHomeGroupScreens =
-    pathName.includes("home") ||
-    pathName.includes("locations") ||
-    pathName.includes("themes");
+  const TAB_SCREENS: TAB_SCREEN_CONFIG[] = [
+    { name: "map", title: "Map", icon: animatedMapIcon },
+    { name: "themes", title: "Themes", icon: animatedThemesIcon },
+    { name: "home", title: "Home", icon: animatedHomeIcon },
+    { name: "locations", title: "Locations", icon: animatedLocIcon },
+    { name: "tools", title: "Tools", icon: animatedToolsIcon },
+  ];
 
   return (
     <Tabs
@@ -34,6 +39,7 @@ export default function RootLayout() {
         tabBarStyle: styles.navBackground,
         tabBarActiveTintColor: iconConfig.ActiveTintColor,
         tabBarInactiveTintColor: iconConfig.InactiveTintColor,
+        animation: "shift",
 
         tabBarBackground: () => (
           <BlurView
@@ -41,112 +47,38 @@ export default function RootLayout() {
             tint="default"
             style={StyleSheet.absoluteFill}
           >
-            <View
-              style={[
-                {
-                  backgroundColor: "#004fce69",
-                  borderRadius: 20,
-                },
-                StyleSheet.absoluteFill,
-              ]}
-            ></View>
+            {/* разобраться с координатами */}
+            <LinearGradient
+              colors={["#0d214b62", "#1f52a570", "#7394d16b"]} //"#0d214bb2", "#1f52a5b6", "#7394d1b0"
+              start={{ x: 1.3, y: 1.1 }}
+              end={{ x: 0, y: -0.1 }}
+              locations={[0, 0.5, 0.9]}
+              style={[{ borderRadius: 20 }, StyleSheet.absoluteFill]}
+            />
           </BlurView>
         ),
       }}
     >
-      <Tabs.Screen
-        name="map"
-        options={{
-          title: "Map",
-          tabBarIcon: ({ focused }) => {
-            const iconColor = focused
-              ? iconConfig.ActiveTintColor
-              : iconConfig.InactiveTintColor;
-            return (
-              <MapIcon
-                height={iconConfig.height}
-                width={iconConfig.width}
-                color={iconColor}
-              />
-            );
-          },
-        }}
-      />
-
-      <Tabs.Screen
-        name="themes"
-        options={{
-          title: "Themes",
-          tabBarButton: isHomeGroupScreens ? undefined : () => null,
-          tabBarIcon: ({ focused }) => {
-            const iconColor = focused
-              ? iconConfig.ActiveTintColor
-              : iconConfig.InactiveTintColor;
-            return (
-              <ThemesIcon
-                height={iconConfig.height}
-                width={iconConfig.width}
-                color={iconColor}
-              />
-            );
-          },
-        }}
-      />
-      <Tabs.Screen
-        name="home"
-        options={{
-          title: "Home",
-          tabBarIcon: ({ focused }) => {
-            const iconColor = focused
-              ? iconConfig.ActiveTintColor
-              : iconConfig.InactiveTintColor;
-            return (
-              <HomeIcon
-                height={iconConfig.height}
-                width={iconConfig.width}
-                color={iconColor}
-              />
-            );
-          },
-        }}
-      />
-      <Tabs.Screen
-        name="locations"
-        options={{
-          title: "Locations",
-          tabBarButton: isHomeGroupScreens ? undefined : () => null,
-          tabBarIcon: ({ focused }) => {
-            const iconColor = focused
-              ? iconConfig.ActiveTintColor
-              : iconConfig.InactiveTintColor;
-            return (
-              <LocIcon
-                height={iconConfig.height}
-                width={iconConfig.width}
-                color={iconColor}
-              />
-            );
-          },
-        }}
-      />
-      <Tabs.Screen
-        name="tools"
-        options={{
-          title: "Tools",
-          tabBarIcon: ({ focused }) => {
-            const iconColor = focused
-              ? iconConfig.ActiveTintColor
-              : iconConfig.InactiveTintColor;
-            return (
-              <ToolsIcon
-                height={iconConfig.height}
-                width={iconConfig.width}
-                color={iconColor}
-              />
-            );
-          },
-        }}
-      />
+      {TAB_SCREENS.map((screen: TAB_SCREEN_CONFIG) => (
+        <Tabs.Screen
+          key={screen.name}
+          name={screen.name}
+          options={{
+            title: screen.title,
+            tabBarIcon: () => {
+              return (
+                <AnimatedTabIcon
+                  activeColor={iconConfig.ActiveTintColor}
+                  inactiveColor={iconConfig.InactiveTintColor}
+                  iconWidth={iconConfig.width}
+                  iconHeight={iconConfig.height}
+                  IconComponent={screen.icon}
+                />
+              );
+            },
+          }}
+        />
+      ))}
     </Tabs>
   );
 }

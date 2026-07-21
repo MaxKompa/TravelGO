@@ -30,3 +30,17 @@ export type DataItem = {
   specification: string;
   shedule: string[];
 };
+
+export type TabIconProps = {
+  IconComponent: React.ComponentType<any>;
+  activeColor: string;
+  inactiveColor: string;
+  iconWidth: number;
+  iconHeight: number;
+};
+
+export type TAB_SCREEN_CONFIG = {
+  title: string;
+  name: string;
+  icon: React.ComponentType<any>;
+};

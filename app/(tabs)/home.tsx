@@ -53,6 +53,7 @@ export default function HomeScreen() {
                 ></TextInput>
               </View>
             </View>
+            {/* добавить анимации ( желательно поменять на Pressable) */}
             <TouchableOpacity style={styles.button}>
               <Text style={{ fontFamily: "PatrickHand-Regular", fontSize: 21 }}>
                 Choose Themes
@@ -73,7 +74,7 @@ const styles = StyleSheet.create({
 
   formContainer: {
     width: "100%",
-    height: "87%",
+    height: "82%",
     backgroundColor: Colors.primary2,
     borderRadius: 34,
     borderTopStartRadius: 0,
@@ -98,10 +99,10 @@ const styles = StyleSheet.create({
   inputs: {
     width: 300,
     height: 40,
-    borderRadius: 20,
+    borderRadius: 12,
     backgroundColor: "white",
     padding: 10,
-    margin: 30,
+    margin: 10,
     marginBottom: 50,
   },
 
@@ -111,7 +112,6 @@ const styles = StyleSheet.create({
     height: 100,
     margin: 5,
     backgroundColor: "white",
-    marginTop: 30,
   },
 
   bottomWrapper: {
