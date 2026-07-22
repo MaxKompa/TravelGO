@@ -1,14 +1,3 @@
-import AnimatedTabIcon from "@/src/components/AnimatedTabIcon";
-import { TAB_SCREEN_CONFIG } from "@/src/types";
-import { BlurView } from "expo-blur";
-import { LinearGradient } from "expo-linear-gradient";
-import { Tabs } from "expo-router";
-import { StyleSheet } from "react-native";
-// import HomeIcon from "../../src/assets/icons/HomeIcon.svg";
-// import LocIcon from "../../src/assets/icons/LocIcon.svg";
-// import MapIcon from "../../src/assets/icons/MapIcon.svg";
-// import ThemesIcon from "../../src/assets/icons/ThemesIcon.svg";
-// import ToolsIcon from "../../src/assets/icons/ToolsIcon.svg";
 import {
   animatedHomeIcon,
   animatedLocIcon,
@@ -16,11 +5,12 @@ import {
   animatedThemesIcon,
   animatedToolsIcon,
 } from "@/src/assets/icons";
-// const animatedHomeIcon = createAnimatedComponent(HomeIcon);
-// const animatedLocIcon = createAnimatedComponent(LocIcon);
-// const animatedMapIcon = createAnimatedComponent(MapIcon);
-// const animatedThemesIcon = createAnimatedComponent(ThemesIcon);
-// const animatedToolsIcon = createAnimatedComponent(ToolsIcon);
+import AnimatedTabIcon from "@/src/components/AnimatedTabIcon";
+import { TAB_SCREEN_CONFIG } from "@/src/types";
+import { BlurView } from "expo-blur";
+import { LinearGradient } from "expo-linear-gradient";
+import { Tabs } from "expo-router";
+import { StyleSheet } from "react-native";
 
 export default function RootLayout() {
   const iconConfig = {
