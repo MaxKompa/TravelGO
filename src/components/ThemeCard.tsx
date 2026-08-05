@@ -8,9 +8,14 @@ import {
 import { Colors } from "../theme";
 import { ThemeCardProps } from "../types";
 
-export default function ThemeCard({ text, width, image }: ThemeCardProps) {
+export default function ThemeCard({
+  text,
+  width,
+  image,
+  onPress,
+}: ThemeCardProps) {
   return (
-    <TouchableOpacity style={[styles.card, { width: width }]}>
+    <TouchableOpacity style={[styles.card, { width: width }]} onPress={onPress}>
       <ImageBackground
         style={styles.backgroundImage}
         source={image}

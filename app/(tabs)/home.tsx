@@ -1,67 +1,100 @@
 import Background from "@/src/components/Background";
+import { useRouter } from "expo-router";
+import { useState } from "react";
 import {
-  Keyboard,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import Header from "../../src/components/Header";
 import { Colors } from "../../src/theme";
 
 export default function HomeScreen() {
+  const router = useRouter();
+  const [inputData, setInputData] = useState({
+    country: "",
+    city: "",
+    start_datetime: "2026-08-03T10:00.274Z",
+    end_datetime: "2026-08-03T18:00.274Z",
+    theme: "",
+  });
+
+  const handlePress = () => {
+    router.push({
+      pathname: "/themes",
+      params: {
+        country: inputData.country,
+        city: inputData.city,
+        theme: inputData.theme,
+      },
+    });
+  };
+
+  // useEffect(() => {
+  //   console.log(inputData.city, inputData.country);
+  // }, [inputData]);
+
   return (
     <Background>
       <Header text={"TravelGo"} />
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.formContainer}>
-          <View style={styles.formWrapper}>
-            <Text style={styles.formText}>Select Country:</Text>
-            <TextInput
-              style={styles.inputs}
-              placeholder="np.Poland"
-            ></TextInput>
-            <Text style={styles.formText}>Select City:</Text>
-            <TextInput
-              style={styles.inputs}
-              placeholder="np.Katowice"
-            ></TextInput>
-            <View style={styles.bottomWrapper}>
-              <View style={styles.asideWrapper}>
-                <Text style={[styles.formText, { fontSize: 25 }]}>
-                  Start time:
-                </Text>
-                <TextInput
-                  keyboardType="numeric"
-                  style={[styles.inputs, { width: 150 }]}
-                  placeholder="dd.mm.rrrr"
-                ></TextInput>
-              </View>
-              <View style={styles.separator}></View>
-              <View style={styles.asideWrapper}>
-                <Text style={[styles.formText, { fontSize: 25 }]}>
-                  End time:
-                </Text>
 
-                {/* добавить библиотеку которая добавляет выбор даты */}
-                <TextInput
-                  keyboardType="numeric"
-                  style={[styles.inputs, { width: 150 }]}
-                  placeholder="dd.mm.rrrr"
-                ></TextInput>
-              </View>
-            </View>
-            {/* добавить анимации ( желательно поменять на Pressable) */}
-            <TouchableOpacity style={styles.button}>
-              <Text style={{ fontFamily: "PatrickHand-Regular", fontSize: 21 }}>
-                Choose Themes
+      <View style={styles.formContainer}>
+        <View style={styles.formWrapper}>
+          <Text style={styles.formText}>Select Country:</Text>
+          <TextInput
+            style={styles.inputs}
+            placeholder="np.Poland"
+            onChangeText={(text: string) =>
+              setInputData((prev) => ({
+                ...prev,
+                country: text,
+              }))
+            }
+          ></TextInput>
+          <Text style={styles.formText}>Select City:</Text>
+          <TextInput
+            style={styles.inputs}
+            placeholder="np.Katowice"
+            onChangeText={(text: string) =>
+              setInputData((prev) => ({
+                ...prev,
+                city: text,
+              }))
+            }
+          ></TextInput>
+          <View style={styles.bottomWrapper}>
+            <View style={styles.asideWrapper}>
+              <Text style={[styles.formText, { fontSize: 25 }]}>
+                Start time:
               </Text>
-            </TouchableOpacity>
+              <TextInput
+                keyboardType="numeric"
+                style={[styles.inputs, { width: 150 }]}
+                placeholder="dd.mm.rrrr"
+              ></TextInput>
+            </View>
+            <View style={styles.separator}></View>
+            <View style={styles.asideWrapper}>
+              <Text style={[styles.formText, { fontSize: 25 }]}>End time:</Text>
+
+              {/* добавить библиотеку которая добавляет выбор даты */}
+              <TextInput
+                keyboardType="numeric"
+                style={[styles.inputs, { width: 150 }]}
+                placeholder="dd.mm.rrrr"
+              ></TextInput>
+            </View>
           </View>
+          {/* добавить анимации ( желательно поменять на Pressable) */}
+          <TouchableOpacity style={styles.button} onPress={handlePress}>
+            <Text style={{ fontFamily: "PatrickHand-Regular", fontSize: 21 }}>
+              Choose Themes
+            </Text>
+          </TouchableOpacity>
         </View>
-      </TouchableWithoutFeedback>
+      </View>
     </Background>
   );
 }

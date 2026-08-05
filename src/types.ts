@@ -12,6 +12,7 @@ export type ThemeCardProps = {
   text: string;
   width: number;
   image: ImageSourcePropType;
+  onPress: () => void;
 };
 
 export type LocationCardProps = {
