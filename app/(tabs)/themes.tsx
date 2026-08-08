@@ -1,10 +1,13 @@
 import Background from "@/src/components/Background";
 import ThemeCard from "@/src/components/ThemeCard";
-import { useLocalSearchParams } from "expo-router";
-import { StyleSheet, View } from "react-native";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useState } from "react";
+import { ActivityIndicator, Alert, StyleSheet, View } from "react-native";
 import Header from "../../src/components/Header";
 
 export default function Themes() {
+  const [isLoading, setIsLoading] = useState(false);
+
   const themeImages = {
     food: require("@/src/assets/images/foodPic.jpg"),
     afterDark: require("@/src/assets/images/afterDarkPic.jpg"),
@@ -14,22 +17,86 @@ export default function Themes() {
   };
 
   const { country, city, theme } = useLocalSearchParams();
+  const router = useRouter();
 
-  const handleSelectTheme = (selectedTheme: string) => {
+  const handleSelectTheme = async (selectedTheme: string) => {
+    if (!city || !country) {
+      Alert.alert("Missing Data", "Please fill in all the fields in the form!");
+      router.push("/home");
+      return;
+    }
+    // объект отправляемый в бекенд
     const fullTripData = {
       country: country,
       city: city,
-      start_datetime: "2026-08-03T10:00.274Z",
-      end_datetime: "2026-08-03T18:00.274Z",
+      start_datetime: "2026-08-03T10:00:00.274Z",
+      end_datetime: "2026-08-03T18:00:00.274Z",
       theme: selectedTheme,
     };
 
-    console.log(fullTripData);
+    // функция отправки данных с формы ввода на сервер
+    const sendTripData = async (fullTripData: object) => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(
+          "http://100.104.140.47:8000/api/plan-trip",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify(fullTripData),
+          },
+        );
+
+        if (!response.ok) {
+          throw new Error(`Server error : ${response.status} `);
+        }
+
+        const res = await response.json();
+        console.log(
+          "Succesfuly server response: ",
+          JSON.stringify(res, null, 2),
+        );
+        return res;
+      } catch (error) {
+        console.log("Request errror : ", error);
+        throw error;
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    // проверка данных
+    console.log(
+      `data request to server: \n${JSON.stringify(fullTripData, null, 2)}`,
+    );
+
+    try {
+      const listData = await sendTripData(fullTripData);
+
+      if (listData) {
+        router.push({
+          pathname: "/locations",
+          params: {
+            listData: JSON.stringify(listData),
+          },
+        });
+      }
+    } catch (err) {
+      Alert.alert("Error", "Could not fetch trip data from the server.");
+    }
   };
 
   return (
     <Background>
       <Header text="Themes" />
+      {isLoading && (
+        <View style={styles.loader}>
+          <ActivityIndicator size="large" color="#ffffff"></ActivityIndicator>
+        </View>
+      )}
       <View style={styles.wrapper}>
         <View style={[styles.themeRow, { marginTop: 120 }]}>
           <ThemeCard
@@ -88,5 +155,13 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     alignItems: "center",
     flexDirection: "row",
+  },
+
+  loader: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.7)", // Полупрозрачный темный фон
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 999, // Ставит поверх всех элементов
   },
 });

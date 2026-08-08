@@ -4,10 +4,10 @@ import { LocationCardProps } from "../types";
 
 export default function LocationCard({
   label,
-  googleRewiew,
-  travelGoRewiew,
-  specification,
+  rating,
+  short_description,
   shedule,
+  photo_url,
 }: LocationCardProps) {
   return (
     <View style={styles.cardBackground}>
@@ -17,8 +17,8 @@ export default function LocationCard({
 
         <View>
           <View style={styles.reviewWraper}>
-            <Text style={styles.rewiewText}>{googleRewiew}</Text>
-            <Text style={styles.rewiewText}>{travelGoRewiew}</Text>
+            <Text style={styles.rewiewText}>{rating}</Text>
+            <Text style={styles.rewiewText}>{rating}</Text>
           </View>
           <View
             style={{
@@ -29,22 +29,19 @@ export default function LocationCard({
               marginBottom: 5,
             }}
           >
-            <Text style={styles.timeText}>{shedule.join("\n")}</Text>
+            <Text style={styles.timeText}>{shedule}</Text>
           </View>
           <View style={styles.separator}></View>
         </View>
 
         <Text style={[styles.label, { fontSize: 18, padding: 10 }]}>
-          {specification}
+          {short_description}
         </Text>
       </View>
       {/* конец описания  */}
       <View style={styles.imageWrapper}>
         {/* пока что статичная фотография, даьше поменять на ссылку с бека  */}
-        <Image
-          source={require("../assets/eventImage1.jpg")}
-          style={styles.cardImage}
-        />
+        <Image source={{ uri: photo_url }} style={styles.cardImage} />
       </View>
       <TouchableOpacity style={styles.addButton}>
         <Text style={{ fontSize: 21 }}>+</Text>

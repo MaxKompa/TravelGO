@@ -17,19 +17,21 @@ export type ThemeCardProps = {
 
 export type LocationCardProps = {
   label: string;
-  googleRewiew: string;
-  travelGoRewiew: string;
-  shedule: string[];
-  specification: string;
+  rating: number;
+  shedule: string;
+  short_description: string;
+  photo_url: string;
 };
 
 export type DataItem = {
-  id: string;
-  label: string;
-  googleRewiew: string;
-  travelGoRewiew: string;
-  specification: string;
-  shedule: string[];
+  id?: string;
+  name: string;
+  rating: number;
+  short_description: string;
+  shedule: string;
+  photo_url: string;
+  open_time?: string; // 👈 Добавили эти поля
+  close_time?: string; // 👈
 };
 
 export type TabIconProps = {
