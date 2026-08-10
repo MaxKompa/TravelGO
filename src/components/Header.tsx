@@ -15,7 +15,7 @@ export default function Header({ text }: HeaderProps) {
 const styles = StyleSheet.create({
   headerWrapper: {
     width: "100%",
-    backgroundColor: "transparment",
+    backgroundColor: "transparent",
     overflow: "hidden",
     elevation: 3,
     position: "absolute",

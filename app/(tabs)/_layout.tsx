@@ -30,6 +30,7 @@ export default function RootLayout() {
 
   return (
     <Tabs
+      initialRouteName="home"
       screenOptions={{
         headerShown: false,
         tabBarStyle: styles.navBackground,

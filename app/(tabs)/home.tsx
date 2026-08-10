@@ -1,17 +1,25 @@
 import Background from "@/src/components/Background";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from "react-native-reanimated";
 import Header from "../../src/components/Header";
 import { Colors } from "../../src/theme";
 
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
 export default function HomeScreen() {
+  //button animation
+  const scale = useSharedValue(1);
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
   const router = useRouter();
   const [inputData, setInputData] = useState({
     country: "",
@@ -22,14 +30,16 @@ export default function HomeScreen() {
   });
 
   const handlePress = () => {
-    router.push({
-      pathname: "/themes",
-      params: {
-        country: inputData.country,
-        city: inputData.city,
-        theme: inputData.theme,
-      },
-    });
+    setTimeout(() => {
+      router.push({
+        pathname: "/themes",
+        params: {
+          country: inputData.country,
+          city: inputData.city,
+          theme: inputData.theme,
+        },
+      });
+    }, 220);
   };
 
   // useEffect(() => {
@@ -42,57 +52,75 @@ export default function HomeScreen() {
 
       <View style={styles.formContainer}>
         <View style={styles.formWrapper}>
-          <Text style={styles.formText}>Select Country:</Text>
-          <TextInput
-            style={styles.inputs}
-            placeholder="np.Poland"
-            onChangeText={(text: string) =>
-              setInputData((prev) => ({
-                ...prev,
-                country: text,
-              }))
-            }
-          ></TextInput>
-          <Text style={styles.formText}>Select City:</Text>
-          <TextInput
-            style={styles.inputs}
-            placeholder="np.Katowice"
-            onChangeText={(text: string) =>
-              setInputData((prev) => ({
-                ...prev,
-                city: text,
-              }))
-            }
-          ></TextInput>
-          <View style={styles.bottomWrapper}>
-            <View style={styles.asideWrapper}>
-              <Text style={[styles.formText, { fontSize: 25 }]}>
-                Start time:
-              </Text>
-              <TextInput
-                keyboardType="numeric"
-                style={[styles.inputs, { width: 150 }]}
-                placeholder="dd.mm.rrrr"
-              ></TextInput>
-            </View>
-            <View style={styles.separator}></View>
-            <View style={styles.asideWrapper}>
-              <Text style={[styles.formText, { fontSize: 25 }]}>End time:</Text>
+          <KeyboardAwareScrollView
+            enableOnAndroid={true}
+            extraScrollHeight={20}
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={{
+              flexGrow: 1,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={styles.formText}>Select Country:</Text>
+            <TextInput
+              style={styles.inputs}
+              placeholder="np.Poland"
+              onChangeText={(text: string) =>
+                setInputData((prev) => ({
+                  ...prev,
+                  country: text,
+                }))
+              }
+            ></TextInput>
+            <Text style={styles.formText}>Select City:</Text>
+            <TextInput
+              style={styles.inputs}
+              placeholder="np.Katowice"
+              onChangeText={(text: string) =>
+                setInputData((prev) => ({
+                  ...prev,
+                  city: text,
+                }))
+              }
+            ></TextInput>
+            <View style={styles.bottomWrapper}>
+              <View style={styles.asideWrapper}>
+                <Text style={[styles.formText, { fontSize: 25 }]}>
+                  Start time:
+                </Text>
+                <TextInput
+                  keyboardType="numeric"
+                  style={[styles.inputs, { width: 150 }]}
+                  placeholder="dd.mm.rrrr"
+                ></TextInput>
+              </View>
+              <View style={styles.separator}></View>
+              <View style={styles.asideWrapper}>
+                <Text style={[styles.formText, { fontSize: 25 }]}>
+                  End time:
+                </Text>
 
-              {/* добавить библиотеку которая добавляет выбор даты */}
-              <TextInput
-                keyboardType="numeric"
-                style={[styles.inputs, { width: 150 }]}
-                placeholder="dd.mm.rrrr"
-              ></TextInput>
+                {/* добавить библиотеку которая добавляет выбор даты */}
+                <TextInput
+                  keyboardType="numeric"
+                  style={[styles.inputs, { width: 150 }]}
+                  placeholder="dd.mm.rrrr"
+                ></TextInput>
+              </View>
             </View>
-          </View>
+          </KeyboardAwareScrollView>
           {/* добавить анимации ( желательно поменять на Pressable) */}
-          <TouchableOpacity style={styles.button} onPress={handlePress}>
+          <AnimatedPressable
+            style={[styles.button, animatedStyle]}
+            onPress={handlePress}
+            onPressIn={() => (scale.value = withSpring(0.8))}
+            onPressOut={() => (scale.value = withSpring(1))}
+          >
             <Text style={{ fontFamily: "PatrickHand-Regular", fontSize: 21 }}>
               Choose Themes
             </Text>
-          </TouchableOpacity>
+          </AnimatedPressable>
         </View>
       </View>
     </Background>
@@ -107,7 +135,7 @@ const styles = StyleSheet.create({
 
   formContainer: {
     width: "100%",
-    height: "82%",
+    height: "85%",
     backgroundColor: Colors.primary2,
     borderRadius: 34,
     borderTopStartRadius: 0,
@@ -116,7 +144,7 @@ const styles = StyleSheet.create({
 
   formWrapper: {
     width: "100%",
-    height: "70%",
+    height: "75%",
     display: "flex",
     alignItems: "center",
     flexDirection: "column",

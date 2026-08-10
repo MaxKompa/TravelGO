@@ -28,10 +28,10 @@ export type DataItem = {
   name: string;
   rating: number;
   short_description: string;
-  shedule: string;
+  sheduleString: string;
   photo_url: string;
-  open_time?: string; // 👈 Добавили эти поля
-  close_time?: string; // 👈
+  open_time?: string;
+  close_time?: string;
 };
 
 export type TabIconProps = {
