@@ -6,6 +6,7 @@ import {
   animatedToolsIcon,
 } from "@/src/assets/icons";
 import AnimatedTabIcon from "@/src/components/AnimatedTabIcon";
+import { Colors } from "@/src/theme";
 import { TAB_SCREEN_CONFIG } from "@/src/types";
 import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
@@ -36,7 +37,10 @@ export default function RootLayout() {
         tabBarStyle: styles.navBackground,
         tabBarActiveTintColor: iconConfig.ActiveTintColor,
         tabBarInactiveTintColor: iconConfig.InactiveTintColor,
-        animation: "shift",
+        animation: "fade",
+        lazy : false,
+        sceneStyle : {backgroundColor: Colors.background},
+        
 
         tabBarBackground: () => (
           <BlurView
