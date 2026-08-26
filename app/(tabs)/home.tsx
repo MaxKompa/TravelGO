@@ -1,6 +1,6 @@
 import Background from "@/src/components/Background";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Animated, {
@@ -10,10 +10,45 @@ import Animated, {
 } from "react-native-reanimated";
 import Header from "../../src/components/Header";
 import { Colors } from "../../src/theme";
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export default function HomeScreen() {
+
+  //datepicker
+  const [isOpenStart, setIsOpenStart] = useState(false);
+  const [isOpenEnd, setIsOpenEnd] = useState(false);
+  
+  const formattedStartDate = () => {
+    if(!inputData.start_datetime) {
+      return "Trip started at.."
+    } else {
+      return new Date(inputData.start_datetime).toLocaleString('ru-RU', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+    }
+  }
+
+  const formattedEndDate = () => {
+    if(!inputData.end_datetime) {
+      return "Trip ended at.."
+    } else {
+      return new Date(inputData.end_datetime).toLocaleString('ru-RU', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+    }
+  }
+
+
   //button animation
   const scale = useSharedValue(1);
   const animatedStyle = useAnimatedStyle(() => ({
@@ -24,8 +59,8 @@ export default function HomeScreen() {
   const [inputData, setInputData] = useState({
     country: "",
     city: "",
-    start_datetime: "2026-08-03T10:00.274Z",
-    end_datetime: "2026-08-03T18:00.274Z",
+    start_datetime: "",
+    end_datetime: "",
     theme: "",
   });
 
@@ -42,9 +77,9 @@ export default function HomeScreen() {
     }, 220);
   };
 
-  // useEffect(() => {
-  //   console.log(inputData.city, inputData.country);
-  // }, [inputData]);
+  useEffect(() => {
+    console.log(inputData);
+  }, [inputData]);
 
   return (
     <Background>
@@ -89,11 +124,28 @@ export default function HomeScreen() {
                 <Text style={[styles.formText, { fontSize: 25 }]}>
                   Start time:
                 </Text>
-                <TextInput
-                  keyboardType="numeric"
-                  style={[styles.inputs, { width: 150 }]}
-                  placeholder="dd.mm.rrrr"
-                ></TextInput>
+                <Pressable
+                  style={[styles.inputs, { width: 150, justifyContent:"center", alignItems:"center" }]}
+                  onPress={() => setIsOpenStart(true)}
+                > 
+                <Text style = {{fontSize:12, opacity:0.7}}>{formattedStartDate()}</Text>
+                </Pressable>
+                  <DateTimePickerModal
+                    isVisible={isOpenStart}
+                    mode="datetime"
+                    locale="en_GB"
+                    onConfirm={(selectedDate) => {
+                      setInputData((prev) => ({
+                        ...prev,
+                        start_datetime: selectedDate.toISOString()
+,
+                      }))
+                      setIsOpenStart(false);
+                    }}
+                    onCancel={() => {
+                      setIsOpenStart(false);
+                    }}
+                  />
               </View>
               <View style={styles.separator}></View>
               <View style={styles.asideWrapper}>
@@ -102,11 +154,28 @@ export default function HomeScreen() {
                 </Text>
 
                 {/* добавить библиотеку которая добавляет выбор даты */}
-                <TextInput
-                  keyboardType="numeric"
-                  style={[styles.inputs, { width: 150 }]}
-                  placeholder="dd.mm.rrrr"
-                ></TextInput>
+                <Pressable
+                  style={[styles.inputs, { width: 150, justifyContent:"center", alignItems:"center" }]}
+                  onPress={() => setIsOpenEnd(true)}
+                > 
+                <Text style = {{fontSize:12, opacity:0.7}}>{formattedEndDate()}</Text>
+                </Pressable>
+                  <DateTimePickerModal
+                    isVisible={isOpenEnd}
+                    mode="datetime"
+                    locale="en_GB"
+                    onConfirm={(selectedDate) => {
+                      setInputData((prev) => ({
+                        ...prev,
+                        end_datetime: selectedDate.toISOString()
+,
+                      }))
+                      setIsOpenEnd(false);
+                    }}
+                    onCancel={() => {
+                      setIsOpenEnd(false);
+                    }}
+                  />
               </View>
             </View>
           </KeyboardAwareScrollView>

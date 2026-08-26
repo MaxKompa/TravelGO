@@ -47,3 +47,7 @@ export type TAB_SCREEN_CONFIG = {
   name: string;
   icon: React.ComponentType<any>;
 };
+
+export type ToolsListOptionProps = {
+  title: string;
+};

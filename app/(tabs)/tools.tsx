@@ -11,7 +11,9 @@ export default function ToolsMenu() {
     <Background>
       <Header text="Tools"/> 
       <View style ={styles.toolsListContainer}>
-        <ToolsListOption/>
+        <ToolsListOption title = "Trip Cost"/>
+        <ToolsListOption title = "Translator"/>
+        <ToolsListOption title = "Local laws"/>
       </View>
     </Background>
   );
@@ -27,7 +29,9 @@ const styles = StyleSheet.create({
       borderRadius:20,
       borderWidth:1,
       borderColor: Colors.primaryBlured,
-      
+      alignItems:"center",
+      padding:20,
+      flexDirection:"column"
     
     }
 })
