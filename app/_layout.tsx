@@ -2,7 +2,7 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
-import { Image } from "expo-image";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -24,21 +24,13 @@ export default function RootLayout() {
     return null;
   }
 
-  // useEffect(() => {
-  //   Image.prefetch([
-  //     "@/src/assets/images/foodPic.jpg",
-  //     "@/src/assets/images/afterDarkPic.jpg",
-  //     "@/src/assets/images/artPic.jpg",
-  //     "@/src/assets/images/hikingPic.png",
-  //     "@/src/assets/images/historyPic.jpg"
-  //   ])
-  // }, []) доделать кеш через import { useAssets } from "expo-asset";
-
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-      }}
-    />
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+        }}
+      />
+    </GestureHandlerRootView>
   );
 }

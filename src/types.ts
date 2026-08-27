@@ -50,4 +50,5 @@ export type TAB_SCREEN_CONFIG = {
 
 export type ToolsListOptionProps = {
   title: string;
+  handleOpenPress: () => void;
 };

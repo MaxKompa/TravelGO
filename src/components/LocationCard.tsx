@@ -40,7 +40,6 @@ export default function LocationCard({
       </View>
       {/* конец описания  */}
       <View style={styles.imageWrapper}>
-        {/* пока что статичная фотография, даьше поменять на ссылку с бека  */}
         <Image source={{ uri: photo_url }} style={styles.cardImage} />
       </View>
       <TouchableOpacity style={styles.addButton}>
