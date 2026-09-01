@@ -2,7 +2,6 @@
 from typing import List, Optional
 from datetime import datetime, time
 
-# Accept data
 class TripRequest(BaseModel):
     country: str
     city: str
@@ -10,14 +9,41 @@ class TripRequest(BaseModel):
     end_datetime: datetime
     theme: str
 
-# Sending data
-class PlaceResponse(BaseModel):
-    name: str
-    photo_url: Optional[str] = None
-    open_time: Optional[time] = None
-    close_time: Optional[time] = None
-    rating: Optional[float] = None
-    short_description: Optional[str] = None
+class OpenHourSchema(BaseModel):
+    day: str
+    open_time: time
+    close_time: time
 
     class Config:
-        orm_mode = True  
+        from_attributes = True
+
+class PlaceResponse(BaseModel):
+    id: int
+    name: str
+    description: Optional[str] = None
+    image_url: Optional[str] = None
+    google_rating: Optional[float] = None
+    price_avg: Optional[float] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+    hours: List[OpenHourSchema] = []
+
+    class Config:
+        from_attributes = True
+
+class UserRegister(BaseModel):
+    username: str
+    email: str
+    password: str
+
+class UserLogin(BaseModel):
+    email: str
+    password: str
+
+class GoogleAuthRequest(BaseModel):
+    token: str
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    username: str
