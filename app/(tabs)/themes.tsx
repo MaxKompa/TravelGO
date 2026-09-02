@@ -16,7 +16,7 @@ export default function Themes() {
     history: require("@/src/assets/images/historyPic.jpg"),
   };
 
-  const { country, city, theme } = useLocalSearchParams();
+  const { country, city, theme, startTrip, endTrip } = useLocalSearchParams();
   const router = useRouter();
 
   const handleSelectTheme = async (selectedTheme: string) => {
@@ -29,8 +29,8 @@ export default function Themes() {
     const fullTripData = {
       country: country,
       city: city,
-      start_datetime: "2026-08-03T10:00:00.274Z",
-      end_datetime: "2026-08-03T18:00:00.274Z",
+      start_datetime: startTrip,
+      end_datetime: endTrip,
       theme: selectedTheme,
     };
 
@@ -39,7 +39,7 @@ export default function Themes() {
       setIsLoading(true);
       try {
         const response = await fetch(
-          "http://100.104.140.47:8000/api/plan-trip",
+          "http://100.74.232.9:8000/api/plan-trip ",
           {
             method: "POST",
             headers: {
@@ -98,7 +98,7 @@ export default function Themes() {
         </View>
       )}
       <View style={styles.wrapper}>
-        <View style={[styles.themeRow, { marginTop: 120 }]}>
+        <View style={[styles.themeRow]}>
           <ThemeCard
             text={"Food"}
             width={351}
@@ -143,15 +143,16 @@ const styles = StyleSheet.create({
   wrapper: {
     display: "flex",
     flexDirection: "column",
+    justifyContent: "center",
+    flex: 1,
   },
 
   themeRow: {
     display: "flex",
     justifyContent: "center",
     padding: 5,
-    margin: 10,
     width: "100%",
-    height: "24%",
+    height: "25%",
     alignSelf: "center",
     alignItems: "center",
     flexDirection: "row",

@@ -4,6 +4,7 @@
     "slug": "TravelGo",
     "version": "1.0.0",
     "orientation": "portrait",
+    "icon": "./src/assets/logo.png",
     "scheme": "travelgo",
     "userInterfaceStyle": "automatic",
     "ios": {
@@ -11,20 +12,19 @@
     },
     "android": {
       "adaptiveIcon": {
+        "foregroundImage": "./src/assets/logo.png",
         "backgroundColor": "#E6F4FE"
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.anonymous.TravelGo"
-    },
-    "web": {
-      "output": "static"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "imageWidth": 200,
+          "image": "./src/assets/logo.png",
+          "imageWidth": 180,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff",
           "dark": {
@@ -41,11 +41,8 @@
           }
         }
       ],
-      "@react-native-community/datetimepicker"
-    ],
-    "experiments": {
-      "typedRoutes": true,
-      "reactCompiler": true
-    }
+      "@react-native-community/datetimepicker",
+      "expo-asset"
+    ]
   }
 }

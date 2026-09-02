@@ -24,20 +24,18 @@ export default function Locations() {
 
   //функция для рендера LocationCard в FlatList
   const renderItem = ({ item }: { item: DataItem }) => {
-    const open = item.open_time ? item.open_time.slice(0, 5) : "";
-    const close = item.close_time ? item.close_time.slice(0, 5) : "";
+    const openTime = item.open_time ? item.open_time.slice(0, 5) : "";
+    const closeTime = item.close_time ? item.close_time.slice(0, 5) : "";
     const scheduleString =
-      open && close ? `${open} - ${close}` : "Время не указано";
+      openTime && closeTime ? `${openTime} - ${closeTime}` : "Время не указано";
 
     return (
       <LocationCard
         label={item.name}
-        // googleRewiew={item.googleRewiew}
-        // travelGoRewiew={item.travelGoRewiew}
-        rating={item.rating}
-        short_description={item.short_description}
+        rating={item.google_rating}
+        short_description={item.description}
         shedule={scheduleString}
-        photo_url={item.photo_url}
+        photo_url={item.image_url}
       />
     );
   };
@@ -84,7 +82,9 @@ export default function Locations() {
                     scale.value = withSpring(1);
                   }}
                 >
-                  <Text>Back to the form</Text>
+                  <Text style={{ fontFamily: "Text", fontSize: 16 }}>
+                    Back to the form
+                  </Text>
                 </AnimatedPressable>
               </View>
             </BlurView>
@@ -126,12 +126,12 @@ const styles = StyleSheet.create({
     height: 200,
     backgroundColor: "#bec4e9b6",
     justifyContent: "space-between",
-    padding: 10,
+    padding: 20,
     borderRadius: 20,
   },
 
   noDataCardText: {
-    fontFamily: "PatrickHand-Regular",
+    fontFamily: "Text",
     fontSize: 20,
     textAlign: "center",
     paddingTop: 30,

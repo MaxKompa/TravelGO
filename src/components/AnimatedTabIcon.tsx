@@ -7,7 +7,7 @@ import Animated, {
   useAnimatedProps,
   useAnimatedStyle,
   useSharedValue,
-  withTiming
+  withTiming,
 } from "react-native-reanimated";
 import { TabIconProps } from "../types";
 
@@ -31,7 +31,7 @@ export default function AnimatedTabIcon({
 
   useEffect(() => {
     progress.value = withTiming(isFocused ? 1 : 0, {
-      duration: 220,
+      duration: 100,
       easing: Easing.linear,
     });
   }, [isFocused]);
@@ -55,7 +55,7 @@ export default function AnimatedTabIcon({
   });
 
   return (
-    <Animated.View style={animatedStyle}>
+    <Animated.View style={[animatedStyle, { marginTop: 3 }]}>
       <IconComponent
         width={iconWidth}
         height={iconHeight}

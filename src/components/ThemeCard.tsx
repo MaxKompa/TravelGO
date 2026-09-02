@@ -1,3 +1,4 @@
+import { LinearGradient } from "expo-linear-gradient";
 import {
   ImageBackground,
   StyleSheet,
@@ -5,7 +6,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Colors } from "../theme";
 import { ThemeCardProps } from "../types";
 
 export default function ThemeCard({
@@ -15,17 +15,27 @@ export default function ThemeCard({
   onPress,
 }: ThemeCardProps) {
   return (
-    <TouchableOpacity style={[styles.card, { width: width }]} onPress={onPress}>
-      <ImageBackground
-        style={styles.backgroundImage}
-        source={image}
-        resizeMode="cover"
+    <View renderToHardwareTextureAndroid={true}>
+      <TouchableOpacity
+        style={[styles.card, { width: width }]}
+        onPress={onPress}
       >
-        <View style={styles.textBackground}>
-          <Text style={styles.cardText}>{text}</Text>
-        </View>
-      </ImageBackground>
-    </TouchableOpacity>
+        <ImageBackground
+          style={styles.backgroundImage}
+          source={image}
+          resizeMode="cover"
+        >
+          <LinearGradient
+            colors={["#000000b9", "#00000028"]}
+            start={{ x: 0.5, y: 1 }}
+            end={{ x: 0.5, y: 0 }}
+            style={[StyleSheet.absoluteFillObject, styles.textBackground]}
+          >
+            <Text style={styles.cardText}>{text}</Text>
+          </LinearGradient>
+        </ImageBackground>
+      </TouchableOpacity>
+    </View>
   );
 }
 
@@ -33,32 +43,29 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "transparent",
     height: "100%",
-    borderRadius: 20,
-    borderColor: Colors.primary2,
-    borderWidth: 2,
+    borderRadius: 10,
+    borderColor: "black",
+    borderWidth: 1,
     margin: 4,
     overflow: "hidden",
-    elevation: 3,
   },
 
   cardText: {
-    fontSize: 24,
-    fontFamily: "PatrickHand-Regular",
-    alignSelf: "center",
+    fontSize: 32,
+    fontFamily: "LabelFont",
+    alignSelf: "flex-start",
     color: "#e6e1d6",
   },
 
   textBackground: {
-    backgroundColor: "#00000080",
-    width: 120,
-    alignSelf: "center",
-    borderRadius: 10,
-    padding: 5,
+    justifyContent: "flex-end",
+    padding: 15,
+    paddingBottom: 5,
   },
 
   backgroundImage: {
-    width: "102%",
-    height: "102%",
+    width: "100%",
+    height: "100%",
     justifyContent: "center",
   },
 });

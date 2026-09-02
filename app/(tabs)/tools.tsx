@@ -1,19 +1,24 @@
 import Background from "@/src/components/Background";
+import CashConverter from "@/src/components/CashConverter";
 import Header from "@/src/components/Header";
 import ToolsListOption from "@/src/components/ToolsListOption";
 import { Colors } from "@/src/theme";
 import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetView,
+  BottomSheetBackdrop
 } from "@gorhom/bottom-sheet";
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function ToolsMenu() {
   // (gorchom) боттом меню
+  const [selectedPage, setSelectedPage] = useState("");
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const handleOpenPress = () => bottomSheetRef.current?.expand();
-  const snapPoints = useMemo(() => ["50%", "75%"], []);
+
+  const handleOpenPress = (page: string) => {
+    setSelectedPage(page);
+    bottomSheetRef.current?.expand();
+  };
+  const snapPoints = useMemo(() => ["85%"], []);
   const renderBackDrop = useCallback(
     (props: any) => (
       <BottomSheetBackdrop
@@ -26,21 +31,61 @@ export default function ToolsMenu() {
     [],
   );
 
-  // Принудительное закрытие, если индекс становится меньше 0
   const handleSheetChanges = useCallback((index: number) => {
     if (index === -1) {
+      setSelectedPage("");
       bottomSheetRef.current?.close();
     }
   }, []);
+  //функция: какую опцию зарендерить (поменять потом на скрины)
+  const renderBottomPage = () => {
+    switch (selectedPage) {
+      case "tripCost":
+        return (
+          <Text style={{ alignSelf: "center", fontSize: 20 }}>
+            Trip Cost page!
+          </Text>
+        );
+      case "translator":
+        return (
+          <Text style={{ alignSelf: "center", fontSize: 20 }}>
+            Translator Page!
+          </Text>
+        );
+      case "localLaws":
+        return (
+          <Text style={{ alignSelf: "center", fontSize: 20 }}>
+            Local Laws Page!
+          </Text>
+        );
+
+      case "converter":
+        return <CashConverter />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <Background>
       <Header text="Tools" />
-
       <View style={styles.toolsListContainer}>
-        <ToolsListOption title="Trip Cost" handleOpenPress={handleOpenPress} />
-        <ToolsListOption title="Translator" handleOpenPress={handleOpenPress} />
-        <ToolsListOption title="Local laws" handleOpenPress={handleOpenPress} />
+        <ToolsListOption
+          title="Trip Cost"
+          handleOpenPress={() => handleOpenPress("tripCost")}
+        />
+        <ToolsListOption
+          title="Translator"
+          handleOpenPress={() => handleOpenPress("translator")}
+        />
+        <ToolsListOption
+          title="Local laws"
+          handleOpenPress={() => handleOpenPress("localLaws")}
+        />
+        <ToolsListOption
+          title="Converter"
+          handleOpenPress={() => handleOpenPress("converter")}
+        />
       </View>
 
       <BottomSheet
@@ -50,10 +95,9 @@ export default function ToolsMenu() {
         enablePanDownToClose={true}
         backdropComponent={renderBackDrop}
         onChange={handleSheetChanges}
+        enableDynamicSizing={false}
       >
-        <BottomSheetView>
-          <Text>Hello World!</Text>
-        </BottomSheetView>
+        {renderBottomPage()}
       </BottomSheet>
     </Background>
   );

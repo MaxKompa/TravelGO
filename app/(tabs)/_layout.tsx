@@ -8,17 +8,17 @@ import {
 import AnimatedTabIcon from "@/src/components/AnimatedTabIcon";
 import { Colors } from "@/src/theme";
 import { TAB_SCREEN_CONFIG } from "@/src/types";
-import { BlurView } from "expo-blur";
-import { LinearGradient } from "expo-linear-gradient";
 import { Tabs } from "expo-router";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function RootLayout() {
+  const insets = useSafeAreaInsets();
   const iconConfig = {
     width: 20,
     height: 20,
-    ActiveTintColor: "#18325B",
-    InactiveTintColor: "#EAEAEA",
+    ActiveTintColor: "#0d58d1",
+    InactiveTintColor: "#747474",
   };
 
   const TAB_SCREENS: TAB_SCREEN_CONFIG[] = [
@@ -37,27 +37,12 @@ export default function RootLayout() {
         tabBarStyle: styles.navBackground,
         tabBarActiveTintColor: iconConfig.ActiveTintColor,
         tabBarInactiveTintColor: iconConfig.InactiveTintColor,
-        animation: "fade",
-        lazy : false,
-        sceneStyle : {backgroundColor: Colors.background},
-        
+        animation: "shift",
+        lazy: false,
+        sceneStyle: { backgroundColor: Colors.background },
+        freezeOnBlur: true,
 
-        tabBarBackground: () => (
-          <BlurView
-            intensity={95}
-            tint="default"
-            style={StyleSheet.absoluteFill}
-          >
-            {/* разобраться с координатами */}
-            <LinearGradient
-              colors={["#0d214b62", "#1f52a570", "#7394d16b"]} //"#0d214bb2", "#1f52a5b6", "#7394d1b0"
-              start={{ x: 1.3, y: 1.1 }}
-              end={{ x: 0, y: -0.1 }}
-              locations={[0, 0.5, 0.9]}
-              style={[{ borderRadius: 20 }, StyleSheet.absoluteFill]}
-            />
-          </BlurView>
-        ),
+        tabBarBackground: () => <View style={styles.navBackground}></View>,
       }}
     >
       {TAB_SCREENS.map((screen: TAB_SCREEN_CONFIG) => (
@@ -87,13 +72,11 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   navBackground: {
     position: "absolute",
-    bottom: 10,
     alignSelf: "center",
-    height: 60,
+    height: 75,
     borderRadius: 20,
-    margin: 10,
     overflow: "hidden",
-    backgroundColor: "transparent",
+    backgroundColor: "white",
     borderTopWidth: 0,
     borderWidth: 0,
     elevation: 0,

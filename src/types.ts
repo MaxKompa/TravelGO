@@ -26,10 +26,10 @@ export type LocationCardProps = {
 export type DataItem = {
   id?: string;
   name: string;
-  rating: number;
-  short_description: string;
+  google_rating: number;
+  description: string;
   sheduleString: string;
-  photo_url: string;
+  image_url: string;
   open_time?: string;
   close_time?: string;
 };

@@ -1,9 +1,10 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import {
-    createAnimatedComponent,
-    useAnimatedStyle,
-    useSharedValue,
-    withSpring,
+  createAnimatedComponent,
+  interpolateColor,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
 } from "react-native-reanimated";
 import UpArrow from "../assets/icons/upArrow.svg";
 import { Colors } from "../theme";
@@ -17,49 +18,51 @@ export default function ToolsListOption({
 }: ToolsListOptionProps) {
   //
   //анимация
-  const color = useSharedValue("#C5CEDF");
+  const isPressed = useSharedValue(0);
   const animatedStyle = useAnimatedStyle(() => ({
-    backgroundColor: color.value,
+    backgroundColor: interpolateColor(
+      isPressed.value,
+      [0, 1],
+      [Colors.background, "#bdc2ca"],
+    ),
   }));
 
   const handlePressIn = () => {
-    color.value = withSpring("#858b96");
+    isPressed.value = withTiming(1, { duration: 150 });
   };
 
   const handlePressOut = () => {
-    color.value = withSpring("#C5CEDF");
+    isPressed.value = withTiming(0, { duration: 150 });
   };
 
   //боттом меню (gorchom)
 
   return (
-    <View style={styles.elementShadow}>
-      <AnimatedOption
-        style={[styles.elementBackground, animatedStyle]}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-        onPress={handleOpenPress}
+    <AnimatedOption
+      style={[styles.elementBackground, animatedStyle]}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      onPress={handleOpenPress}
+    >
+      <Text style={styles.elementTitle}>{title}</Text>
+      <View
+        style={{
+          height: 30,
+          width: 30,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
       >
-        <Text style={styles.elementTitle}>{title}</Text>
-        <View
+        <UpArrow
           style={{
-            height: 30,
-            width: 30,
-            justifyContent: "center",
-            alignItems: "center",
+            height: 20,
+            width: 20,
+            zIndex: 5,
+            transform: [{ rotate: "270deg" }],
           }}
-        >
-          <UpArrow
-            style={{
-              height: 20,
-              width: 20,
-              zIndex: 5,
-              transform: [{ rotate: "270deg" }],
-            }}
-          />
-        </View>
-      </AnimatedOption>
-    </View>
+        />
+      </View>
+    </AnimatedOption>
   );
 }
 
@@ -73,15 +76,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 20,
-    flex: 1,
-  },
-
-  elementShadow: {
     height: 75,
     width: "100%",
-    borderRadius: 17,
     marginVertical: 10,
-    elevation: 2,
   },
 
   elementTitle: {
