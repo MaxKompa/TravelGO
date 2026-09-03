@@ -3,11 +3,10 @@ import CashConverter from "@/src/components/CashConverter";
 import Header from "@/src/components/Header";
 import ToolsListOption from "@/src/components/ToolsListOption";
 import { Colors } from "@/src/theme";
-import BottomSheet, {
-  BottomSheetBackdrop
-} from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export default function ToolsMenu() {
   // (gorchom) боттом меню
@@ -18,7 +17,7 @@ export default function ToolsMenu() {
     setSelectedPage(page);
     bottomSheetRef.current?.expand();
   };
-  const snapPoints = useMemo(() => ["85%"], []);
+  const snapPoints = useMemo(() => ["75%"], []);
   const renderBackDrop = useCallback(
     (props: any) => (
       <BottomSheetBackdrop
@@ -97,7 +96,16 @@ export default function ToolsMenu() {
         onChange={handleSheetChanges}
         enableDynamicSizing={false}
       >
-        {renderBottomPage()}
+        <KeyboardAwareScrollView
+          enableOnAndroid={true}
+          extraScrollHeight={10}
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{
+            flexGrow: 1,
+          }}
+        >
+          {renderBottomPage()}
+        </KeyboardAwareScrollView>
       </BottomSheet>
     </Background>
   );

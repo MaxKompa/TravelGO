@@ -7,6 +7,7 @@ import { useRouter } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Image,
+  Keyboard,
   Pressable,
   StyleSheet,
   Text,
@@ -226,6 +227,9 @@ export default function HomeScreen() {
         snapPoints={snapPoints}
         enablePanDownToClose={true}
         enableDynamicSizing={false}
+        onChange={(index) => {
+          if (index === -1) Keyboard.dismiss();
+        }}
       >
         <BottomSheetView style={styles.formContainer}>
           <KeyboardAwareScrollView

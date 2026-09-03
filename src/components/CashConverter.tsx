@@ -9,8 +9,8 @@ const FLOAT_INPUT_PATTERN = new RegExp("^\\d*(\\.\\d{0,2})?$");
 
 export default function CashConverter() {
   const [amount, setAmount] = useState("");
-  const [from, setFrom] = useState("RUB");
-  const [to, setTo] = useState("USD");
+  const [from, setFrom] = useState("PLN");
+  const [to, setTo] = useState("EUR");
   const [result, setResult] = useState("0.00");
   const [lastUpdateDate, setLastUpdateDate] = useState("");
 
@@ -37,6 +37,7 @@ export default function CashConverter() {
     }
 
     loadRates();
+    console.log("Data fetched!");
   }, []);
 
   //input filter
@@ -67,6 +68,16 @@ export default function CashConverter() {
       }))
     : [];
 
+  //last update func
+  const formattedUpdateDate = new Date(lastUpdateDate).toLocaleDateString(
+    "en-US",
+    {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    },
+  );
+
   //fast "if-renders"
   if (loading) {
     return (
@@ -89,12 +100,33 @@ export default function CashConverter() {
   }
 
   return (
-    <KeyboardAwareScrollView
-      style={styles.keyboardAwareView}
-      contentContainerStyle={{ flexGrow: 1 }}
-    >
-      <View style={styles.converterWrapper}>
+    <View style={styles.converterWrapper}>
+      <KeyboardAwareScrollView
+        enableOnAndroid={true}
+        extraScrollHeight={40}
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{
+          flexGrow: 1,
+        }}
+      >
         <View style={styles.converterCard}>
+          <View
+            style={{
+              borderRadius: 15,
+              backgroundColor: "#0000001a",
+              marginBottom: 10,
+            }}
+          >
+            <Text style={styles.label}>Cash Converter</Text>
+          </View>
+          <Text
+            style={[
+              styles.text,
+              { alignSelf: "flex-start", marginHorizontal: 20, fontSize: 20 },
+            ]}
+          >
+            From:
+          </Text>
           <View style={styles.inputWrapper}>
             <Dropdown
               data={options}
@@ -125,7 +157,14 @@ export default function CashConverter() {
               style={styles.input}
             />
           </View>
-
+          <Text
+            style={[
+              styles.text,
+              { alignSelf: "flex-start", marginHorizontal: 20, fontSize: 20 },
+            ]}
+          >
+            To:
+          </Text>
           <View style={styles.inputWrapper}>
             <Dropdown
               data={options}
@@ -148,34 +187,38 @@ export default function CashConverter() {
               style={styles.input}
             />
           </View>
+          <Text style={styles.text}>
+            Last update of currency info : {formattedUpdateDate}
+          </Text>
         </View>
-      </View>
-    </KeyboardAwareScrollView>
+      </KeyboardAwareScrollView>
+    </View>
   );
 }
 const styles = StyleSheet.create({
   converterWrapper: {
-    height: "100%",
     width: "100%",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    paddingTop: 40,
-    padding: 10,
+    paddingTop: "10%",
+    paddingHorizontal: 15,
   },
   converterCard: {
-    height: "70%",
+    height: 400,
     width: "100%",
     borderRadius: 30,
-    gap: 20,
+    gap: 10,
     backgroundColor: Colors.background,
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
+    paddingVertical: 20,
   },
   inputWrapper: {
     width: "100%",
     height: 60,
     alignItems: "center",
+    marginBottom: 20,
   },
   input: {
     borderRadius: 10,
@@ -193,8 +236,8 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "30%",
     borderRadius: 20,
-    borderTopRightRadius: 10,
-    borderBottomRightRadius: 10,
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
     borderWidth: 2,
     alignSelf: "flex-start",
     position: "absolute",
@@ -208,5 +251,21 @@ const styles = StyleSheet.create({
   },
   keyboardAwareView: {
     flex: 1,
+  },
+  text: {
+    fontSize: 16,
+    fontFamily: "Text",
+    color: Colors.text,
+  },
+
+  label: {
+    fontSize: 28,
+    color: "black",
+    fontFamily: "LabelFont",
+    alignSelf: "center",
+    includeFontPadding: false,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    textAlign: "center",
   },
 });
