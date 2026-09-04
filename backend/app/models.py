@@ -116,3 +116,34 @@ class BudgetRequest(BaseModel):
             }
         }
     }
+
+
+
+class RouteCreate(BaseModel):
+    origin: str
+    destination: str
+    travel_mode: str = "WALK"
+    distance_km: float
+    duration_minutes: int
+    polyline: str
+
+
+class RouteRequest(BaseModel):
+    origin: str = Field(
+        ...,
+        description="Punkt początkowy trasy",
+        examples=["Poznań Główny"]
+    )
+
+    destination: str = Field(
+        ...,
+        description="Punkt docelowy trasy",
+        examples=["Stary Rynek, Poznań"]
+    )
+
+    travel_mode: str = Field(
+        default="WALK",
+        description="Sposób podróży: WALK, DRIVE, BICYCLE lub TRANSIT"
+    )
+
+    
