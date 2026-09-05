@@ -7,5 +7,6 @@ export const Colors = {
   primary2: "#18325B",
   primary: "#2e71df",
   primaryBlured: "#004fce69",
-  text: "#00000059",
+  text: "#0000006b",
+  text2: "#090527a6",
 };

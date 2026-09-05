@@ -15,7 +15,7 @@ export default function ThemeCard({
   onPress,
 }: ThemeCardProps) {
   return (
-    <View renderToHardwareTextureAndroid={true}>
+    <View>
       <TouchableOpacity
         style={[styles.card, { width: width }]}
         onPress={onPress}

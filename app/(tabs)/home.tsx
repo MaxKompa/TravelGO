@@ -236,6 +236,7 @@ export default function HomeScreen() {
             enableOnAndroid={true}
             extraScrollHeight={20}
             keyboardShouldPersistTaps="handled"
+            scrollEnabled={false}
             contentContainerStyle={{
               flexGrow: 1,
               justifyContent: "flex-start",
@@ -464,14 +465,16 @@ const styles = StyleSheet.create({
     marginTop: 15,
     justifyContent: "space-between",
     alignItems: "center",
-    borderRadius: 10,
-    borderWidth: 3,
+    borderRadius: 5,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
     borderColor: Colors.secondary,
     backgroundColor: Colors.secondary,
     margin: 2,
     padding: 15,
     alignSelf: "center",
-    elevation: 1,
+    borderBottomColor: "#00000025",
+    borderWidth: 2,
   },
   button: {
     width: 300,

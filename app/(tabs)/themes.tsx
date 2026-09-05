@@ -1,8 +1,14 @@
 import Background from "@/src/components/Background";
 import ThemeCard from "@/src/components/ThemeCard";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import { useCallback, useState } from "react";
 import { ActivityIndicator, Alert, StyleSheet, View } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withTiming,
+} from "react-native-reanimated";
 import Header from "../../src/components/Header";
 
 export default function Themes() {
@@ -20,7 +26,7 @@ export default function Themes() {
   const router = useRouter();
 
   const handleSelectTheme = async (selectedTheme: string) => {
-    if (!city || !country) {
+    if (!city || !country || !startTrip || !endTrip) {
       Alert.alert("Missing Data", "Please fill in all the fields in the form!");
       router.push("/home");
       return;
@@ -73,6 +79,7 @@ export default function Themes() {
       `data request to server: \n${JSON.stringify(fullTripData, null, 2)}`,
     );
 
+    //функция получения данных с бекенда
     try {
       const listData = await sendTripData(fullTripData);
 
@@ -89,6 +96,47 @@ export default function Themes() {
     }
   };
 
+  // //анимация появления
+  const opacity0 = useSharedValue(0);
+  const opacity1 = useSharedValue(0);
+  const opacity2 = useSharedValue(0);
+  const translateY0 = useSharedValue(50);
+  const translateY1 = useSharedValue(50);
+  const translateY2 = useSharedValue(50);
+
+  useFocusEffect(
+    useCallback(() => {
+      opacity0.value = 0;
+      opacity1.value = 0;
+      opacity2.value = 0;
+      translateY0.value = 50;
+      translateY1.value = 50;
+      translateY1.value = 50;
+
+      opacity0.value = withTiming(1, { duration: 200 });
+      translateY0.value = withTiming(0, { duration: 500 });
+      opacity1.value = withDelay(300, withTiming(1, { duration: 200 }));
+      translateY1.value = withDelay(200, withTiming(0, { duration: 500 }));
+      opacity2.value = withDelay(600, withTiming(1, { duration: 200 }));
+      translateY2.value = withDelay(500, withTiming(0, { duration: 500 }));
+    }, []),
+  );
+
+  const style1 = useAnimatedStyle(() => ({
+    opacity: opacity0.value,
+    transform: [{ translateY: translateY0.value }],
+  }));
+
+  const style2 = useAnimatedStyle(() => ({
+    opacity: opacity1.value,
+    transform: [{ translateY: translateY1.value }],
+  }));
+
+  const style3 = useAnimatedStyle(() => ({
+    opacity: opacity2.value,
+    transform: [{ translateY: translateY2.value }],
+  }));
+
   return (
     <Background>
       <Header text="Themes" />
@@ -97,16 +145,17 @@ export default function Themes() {
           <ActivityIndicator size="large" color="#ffffff"></ActivityIndicator>
         </View>
       )}
+
       <View style={styles.wrapper}>
-        <View style={[styles.themeRow]}>
+        <Animated.View style={[styles.themeRow, style1]}>
           <ThemeCard
             text={"Food"}
             width={351}
             image={themeImages.food}
             onPress={() => handleSelectTheme("food")}
           />
-        </View>
-        <View style={styles.themeRow}>
+        </Animated.View>
+        <Animated.View style={[styles.themeRow, style2]}>
           <ThemeCard
             text={"History"}
             width={210}
@@ -119,8 +168,8 @@ export default function Themes() {
             image={themeImages.hiking}
             onPress={() => handleSelectTheme("hiking")}
           />
-        </View>
-        <View style={styles.themeRow}>
+        </Animated.View>
+        <Animated.View style={[styles.themeRow, style3]}>
           <ThemeCard
             text={"After Dark"}
             width={140}
@@ -133,7 +182,7 @@ export default function Themes() {
             image={themeImages.art}
             onPress={() => handleSelectTheme("art")}
           />
-        </View>
+        </Animated.View>
       </View>
     </Background>
   );

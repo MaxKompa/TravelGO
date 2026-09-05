@@ -2,6 +2,7 @@ import Background from "@/src/components/Background";
 import CashConverter from "@/src/components/CashConverter";
 import Header from "@/src/components/Header";
 import ToolsListOption from "@/src/components/ToolsListOption";
+import Translator from "@/src/components/Translator";
 import { Colors } from "@/src/theme";
 import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import { useCallback, useMemo, useRef, useState } from "react";
@@ -17,7 +18,7 @@ export default function ToolsMenu() {
     setSelectedPage(page);
     bottomSheetRef.current?.expand();
   };
-  const snapPoints = useMemo(() => ["75%"], []);
+  const snapPoints = useMemo(() => ["85%"], []);
   const renderBackDrop = useCallback(
     (props: any) => (
       <BottomSheetBackdrop
@@ -46,11 +47,7 @@ export default function ToolsMenu() {
           </Text>
         );
       case "translator":
-        return (
-          <Text style={{ alignSelf: "center", fontSize: 20 }}>
-            Translator Page!
-          </Text>
-        );
+        return <Translator />;
       case "localLaws":
         return (
           <Text style={{ alignSelf: "center", fontSize: 20 }}>
@@ -98,8 +95,9 @@ export default function ToolsMenu() {
       >
         <KeyboardAwareScrollView
           enableOnAndroid={true}
-          extraScrollHeight={10}
+          extraScrollHeight={90}
           keyboardShouldPersistTaps="handled"
+          scrollEnabled={true}
           contentContainerStyle={{
             flexGrow: 1,
           }}

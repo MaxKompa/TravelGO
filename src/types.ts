@@ -1,7 +1,13 @@
-import { ImageSourcePropType } from "react-native";
+import { DimensionValue, ImageSourcePropType } from "react-native";
 
 export type HeaderProps = {
   text: string;
+};
+
+export type ContentCardProps = {
+  children: React.ReactNode;
+  height: DimensionValue;
+  label: string;
 };
 
 export type BackgroundProps = {
@@ -19,19 +25,26 @@ export type LocationCardProps = {
   label: string;
   rating: number;
   shedule: string;
-  short_description: string;
+  description: string;
   photo_url: string;
+  priceAvg: number;
+  id: number;
 };
 
-export type DataItem = {
-  id?: string;
+export type LocationListItem = {
+  id: number;
   name: string;
-  google_rating: number;
   description: string;
-  sheduleString: string;
   image_url: string;
-  open_time?: string;
-  close_time?: string;
+  google_rating: number;
+  price_avg: number;
+  latitude: number;
+  longitude: number;
+  hours: {
+    day: string;
+    open_time?: string;
+    close_time?: string;
+  }[];
 };
 
 export type TabIconProps = {

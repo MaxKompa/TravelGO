@@ -4,10 +4,12 @@ import { LocationCardProps } from "../types";
 
 export default function LocationCard({
   label,
-  rating,
-  short_description,
-  shedule,
+  description,
   photo_url,
+  rating,
+  priceAvg,
+  shedule,
+  id,
 }: LocationCardProps) {
   return (
     <View style={styles.cardBackground}>
@@ -17,9 +19,10 @@ export default function LocationCard({
 
         <View>
           <View style={styles.reviewWraper}>
-            <Text style={styles.rewiewText}>{rating}</Text>
-            <Text style={styles.rewiewText}>{rating}</Text>
+            <Text style={styles.rewiewText}>{`Reviews: ${rating}`}</Text>
           </View>
+          <Text style={{ color: "white" }}>{`Average price: ${priceAvg}`}</Text>
+
           <View
             style={{
               justifyContent: "flex-start",
@@ -34,8 +37,13 @@ export default function LocationCard({
           <View style={styles.separator}></View>
         </View>
 
-        <Text style={[styles.label, { fontSize: 18, padding: 10 }]}>
-          {short_description}
+        <Text
+          style={[
+            styles.label,
+            { fontSize: 18, padding: 10, fontFamily: "Text" },
+          ]}
+        >
+          {description}
         </Text>
       </View>
       {/* конец описания  */}
@@ -51,7 +59,6 @@ export default function LocationCard({
 
 const styles = StyleSheet.create({
   text: {
-    color: "blue",
     marginTop: 160,
   },
   cardBackground: {
@@ -83,7 +90,7 @@ const styles = StyleSheet.create({
     textShadowColor: "black",
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 1,
-    fontFamily: "Agbalumo-Regular",
+    fontFamily: "LabelFont",
   },
 
   separator: {
@@ -105,13 +112,13 @@ const styles = StyleSheet.create({
     margin: 5,
     color: "white",
     textAlign: "center",
-    fontFamily: "Agbalumo-Regular",
+    fontFamily: "Text",
   },
 
   timeText: {
     fontSize: 10,
     color: "white",
-    fontFamily: "Agbalumo-Regular",
+    fontFamily: "Text",
   },
 
   imageWrapper: {

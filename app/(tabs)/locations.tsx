@@ -4,38 +4,56 @@ import LocationCard from "@/src/components/LocationCard";
 import { Colors } from "@/src/theme";
 import { BlurView } from "expo-blur";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { useMemo } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
-import { DataItem } from "../../src/types";
+import { LocationListItem } from "../../src/types";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+const DAYS_OF_WEEK = [
+  //массив с днями для нахождения расписания
+  "Sunday", // 0
+  "Monday", // 1
+  "Tuesday", // 2
+  "Wednesday", // 3
+  "Thursday", // 4
+  "Friday", // 5
+  "Saturday", // 6
+];
 
 export default function Locations() {
   const router = useRouter();
   const { listData } = useLocalSearchParams();
 
-  const locationList: DataItem[] = listData
-    ? JSON.parse(listData as string)
-    : []; //использовать useMemo для кеширования
+  const locationList: LocationListItem[] = useMemo(
+    () => (listData ? JSON.parse(listData as string) : []),
+    [listData],
+  );
 
   //функция для рендера LocationCard в FlatList
-  const renderItem = ({ item }: { item: DataItem }) => {
-    const openTime = item.open_time ? item.open_time.slice(0, 5) : "";
-    const closeTime = item.close_time ? item.close_time.slice(0, 5) : "";
-    const scheduleString =
-      openTime && closeTime ? `${openTime} - ${closeTime}` : "Время не указано";
+  const renderItem = ({ item }: { item: LocationListItem }) => {
+    const currentDate = DAYS_OF_WEEK[new Date().getDay()];
+    const formattedShedule = () => {
+      const todayShedule = item.hours.find(
+        (h) => h.day.toLowerCase() == currentDate.toLowerCase(), // ищет конкретный день и возвращает весь объект из массива hours
+      );
+      return `${todayShedule?.day} : ${todayShedule?.open_time} - ${todayShedule?.close_time}`;
+    };
 
     return (
       <LocationCard
         label={item.name}
         rating={item.google_rating}
-        short_description={item.description}
-        shedule={scheduleString}
+        description={item.description}
+        shedule={formattedShedule()}
         photo_url={item.image_url}
+        priceAvg={item.price_avg}
+        id={item.id}
       />
     );
   };
@@ -48,7 +66,7 @@ export default function Locations() {
   const handlePress = () => {
     setTimeout(() => {
       router.replace("/home");
-    }, 230);
+    }, 150);
   };
 
   return (
@@ -58,7 +76,7 @@ export default function Locations() {
         <FlatList
           data={locationList}
           renderItem={renderItem}
-          keyExtractor={(item) => item.name}
+          keyExtractor={(item) => item.id.toString()}
           showsVerticalScrollIndicator={true}
           contentContainerStyle={styles.wrapper}
         ></FlatList>

@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import ContentCard from "../components/ContentCard";
 import { fetchRates } from "../services/ExchangeAPI";
 import { Colors } from "../theme";
 
@@ -61,30 +61,31 @@ export default function CashConverter() {
     newResult ? setResult(newResult.toFixed(2)) : null;
   }, [from, to, amount, rates]);
 
-  const options = rates
-    ? Object.keys(rates).map((currency) => ({
-        value: currency,
-        label: currency,
-      }))
-    : [];
+  const options = useMemo(() => {
+    return rates
+      ? Object.keys(rates).map((currency) => ({
+          value: currency,
+          label: currency,
+        }))
+      : [];
+  }, [rates]);
 
-  //last update func
-  const formattedUpdateDate = new Date(lastUpdateDate).toLocaleDateString(
-    "en-US",
-    {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    },
-  );
+  //last update info func
+  const formattedUpdateDate = lastUpdateDate
+    ? new Date(lastUpdateDate).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      })
+    : "N/A";
 
   //fast "if-renders"
   if (loading) {
     return (
       <View style={styles.converterWrapper}>
-        <View style={styles.converterCard}>
+        <ContentCard height={400} label={"Cash Converter"}>
           <Text>Currency loading...</Text>
-        </View>
+        </ContentCard>
       </View>
     );
   }
@@ -92,106 +93,91 @@ export default function CashConverter() {
   if (error) {
     return (
       <View style={styles.converterWrapper}>
-        <View style={styles.converterCard}>
+        <ContentCard height={400} label={"Cash Converter"}>
           <Text>{error}</Text>
-        </View>
+        </ContentCard>
       </View>
     );
   }
 
   return (
     <View style={styles.converterWrapper}>
-      <KeyboardAwareScrollView
-        enableOnAndroid={true}
-        extraScrollHeight={40}
-        keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{
-          flexGrow: 1,
-        }}
-      >
-        <View style={styles.converterCard}>
-          <View
-            style={{
-              borderRadius: 15,
-              backgroundColor: "#0000001a",
-              marginBottom: 10,
-            }}
-          >
-            <Text style={styles.label}>Cash Converter</Text>
-          </View>
-          <Text
-            style={[
-              styles.text,
-              { alignSelf: "flex-start", marginHorizontal: 20, fontSize: 20 },
-            ]}
-          >
-            From:
-          </Text>
-          <View style={styles.inputWrapper}>
-            <Dropdown
-              data={options}
-              mode="default"
-              search
-              labelField={"label"}
-              valueField={"value"}
-              value={from}
-              maxHeight={400}
-              fontFamily="Text"
-              searchPlaceholder="Search..."
-              onChange={(item) => setFrom(item.value)}
-              style={styles.dropdown}
-              selectedTextStyle={{ fontFamily: "Text", fontSize: 18 }}
-              itemTextStyle={{ fontFamily: "Text", fontSize: 16 }}
-              containerStyle={{
-                minWidth: 200,
-                position: "relative",
-                right: 0,
-              }}
-            />
-            <TextInput
-              value={amount}
-              inputMode="decimal"
-              onChangeText={handleChange}
-              placeholder="0.00"
-              placeholderTextColor={"black"}
-              style={styles.input}
-            />
-          </View>
-          <Text
-            style={[
-              styles.text,
-              { alignSelf: "flex-start", marginHorizontal: 20, fontSize: 20 },
-            ]}
-          >
-            To:
-          </Text>
-          <View style={styles.inputWrapper}>
-            <Dropdown
-              data={options}
-              mode="default"
-              search
-              labelField="label"
-              valueField="value"
-              value={to}
-              maxHeight={400}
-              onChange={(item) => setTo(item.value)}
-              searchPlaceholder="Search currency..."
-              style={styles.dropdown}
-              selectedTextStyle={{ fontFamily: "Text", fontSize: 18 }}
-              itemTextStyle={{ fontFamily: "Text", fontSize: 16 }}
-            />
-            <TextInput
-              value={result}
-              editable={false} // Запрещает ручной ввод и вызов клавиатуры
-              selectTextOnFocus={false} // Отключает выделение текста при тапе
-              style={styles.input}
-            />
-          </View>
-          <Text style={styles.text}>
-            Last update of currency info : {formattedUpdateDate}
-          </Text>
+      <ContentCard height={400} label={"Cash Converter"}>
+        {/* Converter block */}
+        <Text
+          style={[
+            styles.text,
+            {
+              alignSelf: "flex-start",
+              marginHorizontal: 20,
+              fontSize: 20,
+              marginTop: 10,
+            },
+          ]}
+        >
+          From:
+        </Text>
+        <View style={styles.inputWrapper}>
+          <Dropdown
+            data={options}
+            mode="default"
+            search
+            labelField={"label"}
+            valueField={"value"}
+            value={from}
+            maxHeight={400}
+            fontFamily="Text"
+            searchPlaceholder="Search..."
+            onChange={(item) => setFrom(item.value)}
+            style={styles.dropdown}
+            selectedTextStyle={{ fontFamily: "Text", fontSize: 18 }}
+            itemTextStyle={{ fontFamily: "Text", fontSize: 14 }}
+          />
+          <TextInput
+            value={amount}
+            inputMode="decimal"
+            onChangeText={handleChange}
+            placeholder="0.00"
+            placeholderTextColor={"black"}
+            style={styles.input}
+          />
         </View>
-      </KeyboardAwareScrollView>
+        <Text
+          style={[
+            styles.text,
+            { alignSelf: "flex-start", marginHorizontal: 20, fontSize: 20 },
+          ]}
+        >
+          To:
+        </Text>
+        <View style={styles.inputWrapper}>
+          <Dropdown
+            data={options}
+            mode="default"
+            search
+            labelField="label"
+            valueField="value"
+            value={to}
+            maxHeight={400}
+            onChange={(item) => setTo(item.value)}
+            searchPlaceholder="Search..."
+            style={styles.dropdown}
+            selectedTextStyle={{ fontFamily: "Text", fontSize: 18 }}
+            itemTextStyle={{ fontFamily: "Text", fontSize: 14 }}
+          />
+          <TextInput
+            value={result}
+            editable={false} // Запрещает ручной ввод и вызов клавиатуры
+            selectTextOnFocus={false} // Отключает выделение текста при тапе
+            style={styles.input}
+          />
+        </View>
+
+        {/* data info */}
+        <Text style={[styles.text, { color: Colors.text }]}>
+          Last update of currency info : {formattedUpdateDate}
+        </Text>
+      </ContentCard>
     </View>
   );
 }
@@ -203,22 +189,13 @@ const styles = StyleSheet.create({
     paddingTop: "10%",
     paddingHorizontal: 15,
   },
-  converterCard: {
-    height: 400,
-    width: "100%",
-    borderRadius: 30,
-    gap: 10,
-    backgroundColor: Colors.background,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 10,
-    paddingVertical: 20,
-  },
+
   inputWrapper: {
     width: "100%",
     height: 60,
     alignItems: "center",
     marginBottom: 20,
+    alignSelf: "center",
   },
   input: {
     borderRadius: 10,
@@ -255,17 +232,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     fontFamily: "Text",
-    color: Colors.text,
-  },
-
-  label: {
-    fontSize: 28,
-    color: "black",
-    fontFamily: "LabelFont",
-    alignSelf: "center",
-    includeFontPadding: false,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    textAlign: "center",
+    color: Colors.text2,
   },
 });
