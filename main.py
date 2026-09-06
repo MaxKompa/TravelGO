@@ -1,14 +1,14 @@
 ﻿from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from typing import List
-import datetime
+from typing import Optional, List
 
-import models, schemas
-from database import engine, get_db
+import models
+import schemas
+from database import get_db
 from api_service import fetch_places_from_api
 
-from fastapi import HTTPException, status
+from fastapi import Query, HTTPException
 import auth
 
 # Эту строчку мы отключаем, так как БД создает DBA
@@ -24,9 +24,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.post("/api/plan-trip", response_model=List[schemas.PlaceResponse])
 def plan_trip(request: schemas.TripRequest, db: Session = Depends(get_db)):
-
     req_start_time = request.start_datetime.time()
     req_end_time = request.end_datetime.time()
     # Określamy dzień tygodnia (na przykład „Monday”) na podstawie daty zapytania
@@ -84,19 +84,19 @@ def plan_trip(request: schemas.TripRequest, db: Session = Depends(get_db)):
                 longitude=item["longitude"]
             )
             db.add(new_location)
-            db.flush() # Funkcja `flush` wysyła dane do bazy danych w celu uzyskania identyfikatora, ale nie kończy transakcji całkowicie
+            db.flush()  # Funkcja `flush` wysyła dane do bazy danych w celu uzyskania identyfikatora, ale nie kończy transakcji całkowicie
 
             # Zapisujemy godziny otwarcia dla tej lokalizacji
             for h in item["hours"]:
                 new_hour = models.OpenHours(
-                    location_id=new_location.id, # Wykorzystujemy aktualny identyfikator lokalizacji
+                    location_id=new_location.id,  # Wykorzystujemy aktualny identyfikator lokalizacji
                     day=h["day"],
                     open_time=h["open_time"],
                     close_time=h["close_time"]
                 )
                 db.add(new_hour)
 
-        db.commit() # Zapisujemy wszystko razem (zarówno lokalizacje, jak i godziny)
+        db.commit()  # Zapisujemy wszystko razem (zarówno lokalizacje, jak i godziny)
 
         # Pobieramy zaktualizowane dane z bazy
         locations_in_db = db.query(models.Location).filter(
@@ -118,6 +118,7 @@ def plan_trip(request: schemas.TripRequest, db: Session = Depends(get_db)):
                 available_places.append(loc)
 
     return available_places
+
 
 @app.post("/api/auth/register", response_model=schemas.TokenResponse)
 def register_user(user: schemas.UserRegister, db: Session = Depends(get_db)):
@@ -173,7 +174,7 @@ def google_auth(request: schemas.GoogleAuthRequest, db: Session = Depends(get_db
             # Создаем полностью нового юзера
             user_local = models.UserLocal(username=name, email=email, avatar_url=avatar)
             db.add(user_local)
-            db.flush() # Получаем ID для связи
+            db.flush()  # Получаем ID для связи
 
         # Привязываем Google-аккаунт к user_local
         new_google_link = models.UserGoogle(
@@ -187,3 +188,71 @@ def google_auth(request: schemas.GoogleAuthRequest, db: Session = Depends(get_db
 
     token = auth.create_access_token(data={"sub": str(user_local.id)})
     return {"access_token": token, "username": user_local.username}
+
+
+@app.get("/api/laws/{country_name}", response_model=List[schemas.LawResponse])
+def get_local_laws(
+        country_name: str,
+        region_name: Optional[str] = Query(None, description="Название региона, если есть"),
+        db: Session = Depends(get_db)
+):
+    # 1. Ищем страну по имени
+    country = db.query(models.Country).filter(models.Country.name == country_name).first()
+    if not country:
+        raise HTTPException(status_code=404, detail="Страна не найдена в базе")
+
+    # 2. Базовый запрос: ищем законы для этой страны
+    query = db.query(models.Law).filter(models.Law.country_id == country.id)
+
+    # 3. Фильтруем по региону, если фронтенд его передал
+    if region_name:
+        region = db.query(models.Region).filter(
+            models.Region.name == region_name,
+            models.Region.country_id == country.id
+        ).first()
+
+        if region:
+            # Отдаем законы конкретного региона ИЛИ федеральные (где region_id пустой)
+            query = query.filter((models.Law.region_id == region.id) | (models.Law.region_id == None))
+        else:
+            # Если регион запрошен, но не найден, отдаем только общие законы страны
+            query = query.filter(models.Law.region_id == None)
+    else:
+        # Если регион не запрашивали, отдаем только общие законы страны
+        query = query.filter(models.Law.region_id == None)
+
+    return query.all()
+
+
+@app.get("/api/laws/{country_name}", response_model=List[schemas.LawResponse])
+def get_local_laws(
+        country_name: str,
+        region_name: Optional[str] = Query(None, description="Название региона, если есть"),
+        db: Session = Depends(get_db)
+):
+    # 1. Ищем страну по имени
+    country = db.query(models.Country).filter(models.Country.name == country_name).first()
+    if not country:
+        raise HTTPException(status_code=404, detail="Страна не найдена в базе")
+
+    # 2. Базовый запрос: ищем законы для этой страны
+    query = db.query(models.Law).filter(models.Law.country_id == country.id)
+
+    # 3. Фильтруем по региону, если фронтенд его передал
+    if region_name:
+        region = db.query(models.Region).filter(
+            models.Region.name == region_name,
+            models.Region.country_id == country.id
+        ).first()
+
+        if region:
+            # Отдаем законы конкретного региона ИЛИ федеральные (где region_id пустой)
+            query = query.filter((models.Law.region_id == region.id) | (models.Law.region_id == None))
+        else:
+            # Если регион запрошен, но не найден, отдаем только общие законы страны
+            query = query.filter(models.Law.region_id == None)
+    else:
+        # Если регион не запрашивали, отдаем только общие законы страны
+        query = query.filter(models.Law.region_id == None)
+
+    return query.all()

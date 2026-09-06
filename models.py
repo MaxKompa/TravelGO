@@ -69,3 +69,16 @@ class UserGoogle(Base):
     provider_id = Column(String(255), unique=True)
     email = Column(String(255))
     avatar_url = Column(String(255), nullable=True)
+
+class Law(Base):
+    __tablename__ = "laws"
+    id = Column(Integer, primary_key=True, index=True)
+    country_id = Column(Integer, ForeignKey("country.id"))
+    region_id = Column(Integer, ForeignKey("regions.id"), nullable=True)
+
+    # Категории законов
+    drinking = Column(String(255))
+    jaywalking = Column(String(255))
+    sunday_trade = Column(String(255))
+    public_transport = Column(String(255))
+    night_noise = Column(String(255))

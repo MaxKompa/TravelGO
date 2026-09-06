@@ -47,3 +47,16 @@ class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
     username: str
+
+class LawResponse(BaseModel):
+    id: int
+    country_id: int
+    region_id: Optional[int] = None
+    drinking: Optional[str] = None
+    jaywalking: Optional[str] = None
+    sunday_trade: Optional[str] = None
+    public_transport: Optional[str] = None
+    night_noise: Optional[str] = None
+
+    class Config:
+        from_attributes = True
