@@ -1,10 +1,10 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Colors } from "../../src/theme";
+import { LinearGradient } from "expo-linear-gradient";
+import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import { LocationCardProps } from "../types";
 
 export default function LocationCard({
   label,
-  description,
+  discription,
   photo_url,
   rating,
   priceAvg,
@@ -12,142 +12,107 @@ export default function LocationCard({
   id,
 }: LocationCardProps) {
   return (
-    <View style={styles.cardBackground}>
-      <View style={styles.disc}>
-        <Text style={styles.label}>{label}</Text>
-        <View style={styles.separator}></View>
-
-        <View>
-          <View style={styles.reviewWraper}>
-            <Text style={styles.rewiewText}>{`Reviews: ${rating}`}</Text>
-          </View>
-          <Text style={{ color: "white" }}>{`Average price: ${priceAvg}`}</Text>
-
-          <View
-            style={{
-              justifyContent: "flex-start",
-              width: "100%",
-              paddingLeft: 10,
-              marginTop: 5,
-              marginBottom: 5,
-            }}
-          >
-            <Text style={styles.timeText}>{shedule}</Text>
-          </View>
-          <View style={styles.separator}></View>
-        </View>
-
-        <Text
-          style={[
-            styles.label,
-            { fontSize: 18, padding: 10, fontFamily: "Text" },
-          ]}
+    <View style={styles.cardWrapper}>
+      <View style={styles.imgWrapper}>
+        <ImageBackground
+          style={styles.image}
+          source={{ uri: photo_url }}
+          resizeMode="cover"
         >
-          {description}
-        </Text>
+          <LinearGradient
+            colors={["#0000008a", "#ffffff13"]}
+            start={{ x: 0.4, y: 0 }}
+            end={{ x: 0.6, y: 1 }}
+            style={[
+              StyleSheet.absoluteFillObject,
+              { padding: 20, justifyContent: "space-between" },
+            ]}
+          >
+            <View style={styles.labelConteiner}>
+              <Text style={styles.labelText}>{label}</Text>
+            </View>
+
+            <View style={styles.priceConteiner}>
+              <Text
+                style={styles.labelText}
+              >{`Average price: ~${priceAvg} zl`}</Text>
+            </View>
+          </LinearGradient>
+        </ImageBackground>
       </View>
-      {/* конец описания  */}
-      <View style={styles.imageWrapper}>
-        <Image source={{ uri: photo_url }} style={styles.cardImage} />
+      <View style={styles.infoConteiner}>
+        <View style={styles.infoBlock}>
+          <Text style={styles.infoLable}>{`Discription: ${discription}`}</Text>
+          <Text style={styles.infoText}>{`Rating: ${rating}`}</Text>
+          <Text style={styles.infoLable}>Open time:</Text>
+          <Text style={styles.infoText}>{shedule}</Text>
+        </View>
       </View>
-      <TouchableOpacity style={styles.addButton}>
-        <Text style={{ fontSize: 21 }}>+</Text>
-      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  text: {
-    marginTop: 160,
-  },
-  cardBackground: {
-    backgroundColor: Colors.secondary,
-    margin: 20,
-    borderRadius: 20,
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    width: "85%",
-    elevation: 5,
-  },
-  disc: {
-    display: "flex",
+  cardWrapper: {
+    width: "100%",
+    height: 400,
     flexDirection: "column",
-    backgroundColor: Colors.errors,
-    width: "50%",
-    borderRadius: 20,
-    alignItems: "center",
-    padding: 7,
-    marginRight: 10,
-    justifyContent: "space-between",
-  },
-  label: {
-    padding: 10,
-    fontSize: 22,
-    color: "white",
-    textAlign: "center",
-    textShadowColor: "black",
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 1,
-    fontFamily: "LabelFont",
+    paddingHorizontal: "5%",
   },
 
-  separator: {
-    width: 70,
-    height: 2,
-    backgroundColor: "#eaeaeab6",
-    borderRadius: 20,
-    alignSelf: "center",
-    marginTop: 10,
+  image: {
+    flex: 1,
+    padding: 20,
   },
-  reviewWraper: {
-    marginTop: 5,
+
+  imgWrapper: {
     width: "100%",
-    display: "flex",
-    flexDirection: "row",
-  },
-  rewiewText: {
-    fontSize: 11,
-    margin: 5,
-    color: "white",
-    textAlign: "center",
-    fontFamily: "Text",
-  },
-
-  timeText: {
-    fontSize: 10,
-    color: "white",
-    fontFamily: "Text",
-  },
-
-  imageWrapper: {
-    width: "48%",
-    backgroundColor: Colors.background,
-    borderRadius: 20,
-    marginLeft: 3,
-    justifyContent: "center",
-    alignItems: "center",
+    height: "70%",
     overflow: "hidden",
-    aspectRatio: 0.5,
+    borderTopStartRadius: 25,
+    borderTopEndRadius: 25,
   },
 
-  cardImage: {
-    borderRadius: 20,
-    resizeMode: "cover",
+  labelConteiner: {
     width: "100%",
-    height: "100%",
+  },
+  priceConteiner: {
+    width: "80%",
+    alignSelf: "flex-end",
+
+    alignItems: "flex-end",
   },
 
-  addButton: {
-    position: "absolute",
-    top: "92%",
-    height: 45,
-    width: 45,
-    borderRadius: 15,
-    backgroundColor: Colors.button2,
-    display: "flex",
+  labelText: {
+    width: "75%",
+    fontFamily: "LabelFont",
+    fontSize: 25,
+    color: "white",
+  },
+
+  infoConteiner: {
+    width: "100%",
+    height: "30%",
+    backgroundColor: "white",
+    borderBottomStartRadius: 10,
+    borderBottomEndRadius: 10,
+    padding: 5,
+    paddingHorizontal: 15,
     justifyContent: "center",
-    alignItems: "center",
+  },
+
+  infoBlock: {
+    width: "80%",
+    gap: 3,
+  },
+
+  infoLable: {
+    fontSize: 17,
+    fontFamily: "Text",
+  },
+
+  infoText: {
+    fontSize: 13,
+    fontFamily: "Text",
   },
 });

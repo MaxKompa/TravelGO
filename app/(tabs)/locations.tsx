@@ -42,14 +42,14 @@ export default function Locations() {
       const todayShedule = item.hours.find(
         (h) => h.day.toLowerCase() == currentDate.toLowerCase(), // ищет конкретный день и возвращает весь объект из массива hours
       );
-      return `${todayShedule?.day} : ${todayShedule?.open_time} - ${todayShedule?.close_time}`;
+      return `${todayShedule?.day} : ${todayShedule?.open_time?.slice(0, 5)} - ${todayShedule?.close_time?.slice(0, 5)}`;
     };
 
     return (
       <LocationCard
         label={item.name}
         rating={item.google_rating}
-        description={item.description}
+        discription={item.description}
         shedule={formattedShedule()}
         photo_url={item.image_url}
         priceAvg={item.price_avg}
@@ -73,13 +73,16 @@ export default function Locations() {
     <Background>
       <Header text="Locations"></Header>
       {locationList && locationList.length > 0 && (
-        <FlatList
-          data={locationList}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id.toString()}
-          showsVerticalScrollIndicator={true}
-          contentContainerStyle={styles.wrapper}
-        ></FlatList>
+        <>
+          <View style={styles.headerBuffer}></View>
+          <FlatList
+            data={locationList}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id.toString()}
+            showsVerticalScrollIndicator={true}
+            contentContainerStyle={styles.flatlist}
+          ></FlatList>
+        </>
       )}
 
       {(!locationList || locationList.length === 0) && (
@@ -114,10 +117,15 @@ export default function Locations() {
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    alignItems: "center",
-    paddingTop: 90,
+  headerBuffer: {
+    width: "100%",
+    height: 85,
+  },
+  flatlist: {
+    gap: 20,
     paddingBottom: 100,
+    overflow: "hidden",
+    paddingTop: 15,
   },
 
   noDataCardWrapper: {

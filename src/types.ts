@@ -25,7 +25,7 @@ export type LocationCardProps = {
   label: string;
   rating: number;
   shedule: string;
-  description: string;
+  discription: string;
   photo_url: string;
   priceAvg: number;
   id: number;
