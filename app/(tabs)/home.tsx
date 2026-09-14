@@ -2,6 +2,7 @@ import Background from "@/src/components/Background";
 import { Colors } from "@/src/theme";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 
+import AccountButton from "@/src/components/AccountButton";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -23,10 +24,11 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 import { Carousel } from "react-native-reanimated-carousel";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ClearButtonIcon from "../../src/assets/icons/ClearButtonIcon.svg";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-const data = [
+const carouselImages = [
   {
     id: 1,
     image: require("../../src/assets/images/carousel-images/carousel-image1.jpg"),
@@ -62,7 +64,7 @@ export default function HomeScreen() {
   //datepicker
   const [isOpenStart, setIsOpenStart] = useState(false);
   const [isOpenEnd, setIsOpenEnd] = useState(false);
-
+  const insets = useSafeAreaInsets();
   const formattedStartDate = () => {
     if (!inputData.start_datetime) {
       return "Trip started at..";
@@ -170,10 +172,11 @@ export default function HomeScreen() {
 
   return (
     <Background>
+      <AccountButton />
       {/* main page */}
       <Carousel
         style={{ width, height: 500 }}
-        data={data}
+        data={carouselImages}
         loop
         autoplay={true}
         scrollEnabled={false}

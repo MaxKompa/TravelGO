@@ -50,7 +50,7 @@ export default function Locations() {
         label={item.name}
         rating={item.google_rating}
         discription={item.description}
-        shedule={formattedShedule()}
+        todaySchedule={formattedShedule()}
         photo_url={item.image_url}
         priceAvg={item.price_avg}
         id={item.id}

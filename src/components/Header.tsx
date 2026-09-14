@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { HeaderProps } from "../../src/types";
+import AccountButton from "./AccountButton";
 
 export default function Header({ text }: HeaderProps) {
   const path = usePathname();
@@ -19,6 +20,7 @@ export default function Header({ text }: HeaderProps) {
         <View style={styles.separator}></View>
         <Text style={styles.disc}>{text}</Text>
       </View>
+      {!path.includes("userAccount") && <AccountButton />}
     </View>
   );
 }
@@ -63,5 +65,11 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     marginHorizontal: 10,
     borderRadius: 5,
+  },
+
+  accountButtonConteiner: {
+    width: "30%",
+    height: "100%",
+    backgroundColor: "black",
   },
 });

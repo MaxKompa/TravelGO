@@ -31,6 +31,9 @@ export default function Themes() {
       router.push("/home");
       return;
     }
+
+    const userLocation = Intl.DateTimeFormat().resolvedOptions().timeZone; // переменная с локацией пользователя !
+
     // объект отправляемый в бекенд
     const fullTripData = {
       country: country,
@@ -38,6 +41,7 @@ export default function Themes() {
       start_datetime: startTrip,
       end_datetime: endTrip,
       theme: selectedTheme,
+      user_location: userLocation,
     };
 
     // функция отправки данных с формы ввода на сервер
@@ -59,6 +63,10 @@ export default function Themes() {
         if (!response.ok) {
           throw new Error(`Server error : ${response.status} `);
         }
+        console.log(
+          "Content-Length от сервера:",
+          response.headers.get("content-length"),
+        );
 
         const res = await response.json();
         console.log(

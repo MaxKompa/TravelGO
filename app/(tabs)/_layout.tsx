@@ -27,6 +27,7 @@ export default function RootLayout() {
     { name: "home", title: "Home", icon: animatedHomeIcon },
     { name: "locations", title: "Locations", icon: animatedLocIcon },
     { name: "tools", title: "Tools", icon: animatedToolsIcon },
+    { name: "userAccount", title: "UserAccount", href: null },
   ];
 
   return (
@@ -51,7 +52,9 @@ export default function RootLayout() {
           name={screen.name}
           options={{
             title: screen.title,
+            href: screen.href,
             tabBarIcon: () => {
+              if (!screen.icon) return null;
               return (
                 <AnimatedTabIcon
                   activeColor={iconConfig.ActiveTintColor}

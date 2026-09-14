@@ -24,7 +24,7 @@ export type ThemeCardProps = {
 export type LocationCardProps = {
   label: string;
   rating: number;
-  shedule: string;
+  todaySchedule: string;
   discription: string;
   photo_url: string;
   priceAvg: number;
@@ -58,7 +58,8 @@ export type TabIconProps = {
 export type TAB_SCREEN_CONFIG = {
   title: string;
   name: string;
-  icon: React.ComponentType<any>;
+  icon?: React.ComponentType<any>;
+  href?: string | null;
 };
 
 export type ToolsListOptionProps = {

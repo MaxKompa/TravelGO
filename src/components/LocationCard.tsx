@@ -1,5 +1,18 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { ImageBackground, StyleSheet, Text, View } from "react-native";
+import { useState } from "react";
+import {
+  ImageBackground,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import Animated, {
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import { LocationCardProps } from "../types";
 
 export default function LocationCard({
@@ -8,12 +21,55 @@ export default function LocationCard({
   photo_url,
   rating,
   priceAvg,
-  shedule,
+  todaySchedule,
   id,
 }: LocationCardProps) {
+  const [text, setText] = useState(todaySchedule);
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const progress = useSharedValue(0);
+
+  const updateText = (expanded: boolean) => {
+    setText(
+      expanded
+        ? `monday: ;;; \n tuesday : ;;; \n thirthday: ;;; \n satuday: ;;; \n friday: ;;; \n subbota: ;;; \n sunday: ;;;`
+        : todaySchedule,
+    );
+  };
+
+  const toggleAnimation = () => {
+    console.log("button pressed");
+    const nextState = !isExpanded;
+    setIsExpanded(nextState);
+
+    progress.value = withTiming(nextState ? 1 : 0, { duration: 400 });
+    updateText(nextState);
+  };
+
+  const animatedImage = useAnimatedStyle(() => {
+    const heightPercent = interpolate(progress.value, [0, 1], [70, 50]);
+    return {
+      height: `${heightPercent}%`,
+    };
+  });
+
+  const animatedCardWrapper = useAnimatedStyle(() => {
+    const heightPcs = interpolate(progress.value, [0, 1], [400, 450]);
+    return {
+      height: heightPcs,
+    };
+  });
+
+  const animatedInfoBlock = useAnimatedStyle(() => {
+    const heightPercent = interpolate(progress.value, [0, 1], [30, 50]);
+    return {
+      height: `${heightPercent}%`,
+    };
+  });
+
   return (
-    <View style={styles.cardWrapper}>
-      <View style={styles.imgWrapper}>
+    <Animated.View style={[styles.cardWrapper, animatedCardWrapper]}>
+      <Animated.View style={[styles.imgWrapper, animatedImage]}>
         <ImageBackground
           style={styles.image}
           source={{ uri: photo_url }}
@@ -34,28 +90,39 @@ export default function LocationCard({
 
             <View style={styles.priceConteiner}>
               <Text
-                style={styles.labelText}
+                style={[styles.labelText, { fontSize: 23, textAlign: "right" }]}
               >{`Average price: ~${priceAvg} zl`}</Text>
             </View>
           </LinearGradient>
         </ImageBackground>
-      </View>
-      <View style={styles.infoConteiner}>
+      </Animated.View>
+      <Animated.View style={[styles.infoConteiner, animatedInfoBlock]}>
         <View style={styles.infoBlock}>
           <Text style={styles.infoLable}>{`Discription: ${discription}`}</Text>
           <Text style={styles.infoText}>{`Rating: ${rating}`}</Text>
           <Text style={styles.infoLable}>Open time:</Text>
-          <Text style={styles.infoText}>{shedule}</Text>
+          <Text style={styles.infoText}>{text}</Text>
+          <Pressable
+            onPress={toggleAnimation}
+            style={{
+              height: 15,
+              width: 100,
+              borderColor: "black",
+              borderWidth: 1,
+            }}
+          >
+            <Text>click</Text>
+          </Pressable>
         </View>
-      </View>
-    </View>
+      </Animated.View>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   cardWrapper: {
     width: "100%",
-    height: 400,
+
     flexDirection: "column",
     paddingHorizontal: "5%",
   },
@@ -67,7 +134,7 @@ const styles = StyleSheet.create({
 
   imgWrapper: {
     width: "100%",
-    height: "70%",
+
     overflow: "hidden",
     borderTopStartRadius: 25,
     borderTopEndRadius: 25,
@@ -79,7 +146,6 @@ const styles = StyleSheet.create({
   priceConteiner: {
     width: "80%",
     alignSelf: "flex-end",
-
     alignItems: "flex-end",
   },
 
@@ -92,13 +158,12 @@ const styles = StyleSheet.create({
 
   infoConteiner: {
     width: "100%",
-    height: "30%",
     backgroundColor: "white",
     borderBottomStartRadius: 10,
     borderBottomEndRadius: 10,
     padding: 5,
     paddingHorizontal: 15,
-    justifyContent: "center",
+    overflow: "hidden",
   },
 
   infoBlock: {
