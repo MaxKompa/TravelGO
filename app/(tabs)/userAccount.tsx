@@ -1,7 +1,11 @@
 import Background from "@/src/components/Background";
 import Header from "@/src/components/Header";
+import RegistrationForm from "@/src/components/RegistrationForm";
 import { Colors } from "@/src/theme";
-import { useState } from "react";
+import { InfoForCreateAcc } from "@/src/types";
+import { getIsLogged } from "@/src/utils/AsyncStorage";
+import { usePathname } from "expo-router";
+import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
   createAnimatedComponent,
@@ -15,13 +19,36 @@ import NoLogginedUserIcon from "../../src/assets/icons/noLogginedUserIcon.svg";
 const AnimatedPressable = createAnimatedComponent(Pressable);
 
 export default function userAccount() {
+  const [accountCreatingFormInfo, setAccountCreatingFormInfo] =
+    useState<InfoForCreateAcc>({
+      username: "",
+      password: "",
+      email: "",
+    });
+  const path = usePathname();
   const username = "ExampleUser123";
   const [trips, setTrips] = useState([]);
   const [review, setReview] = useState([]);
   const [optionSelected, setOptionSelected] = useState<"trips" | "reviews">(
     "trips",
   );
+  const [isUserLogged, setIsUserLogged] = useState<boolean | null>(false);
 
+  // проверка зарегестрирован ли юзер через asyncStorage
+  useEffect(() => {
+    if (path.includes("/userAccount")) {
+      const checkAuth = async () => {
+        const asyncStorageResponse = await getIsLogged();
+        setIsUserLogged(asyncStorageResponse);
+
+        console.log(`Is user logged : ${isUserLogged}`);
+      };
+
+      checkAuth();
+    }
+  }, [path]);
+
+  // animation ----------------------------------------------------------
   const animProgres = useSharedValue(0);
 
   const backgroundStyleRev = useAnimatedStyle(() => ({
@@ -45,48 +72,62 @@ export default function userAccount() {
   const textStyleTr = useAnimatedStyle(() => ({
     color: interpolateColor(animProgres.value, [0, 1], ["#fff", "#000000"]),
   }));
-  const handlePress = (option: "trips" | "reviews") => {
+
+  // selector click handler
+  const selectorPressHandler = (option: "trips" | "reviews") => {
     setOptionSelected(option);
 
     animProgres.value = withTiming(option == "trips" ? 0 : 1, {
       duration: 300,
     });
   };
+  //---------------------------------------------
+
   return (
     <Background>
-      <Header text="Profile" />
-      <View style={styles.contentWrapper}>
-        <View style={styles.avatarWrapper}>
-          <View style={styles.avatarBackground}>
-            <NoLogginedUserIcon
-              width={80}
-              height={80}
-              color={"white"}
-            ></NoLogginedUserIcon>
+      {isUserLogged && (
+        <>
+          <Header text="Profile" />
+          <View style={styles.contentWrapper}>
+            <View style={styles.avatarWrapper}>
+              <View style={styles.avatarBackground}>
+                <NoLogginedUserIcon
+                  width={80}
+                  height={80}
+                  color={"white"}
+                ></NoLogginedUserIcon>
+              </View>
+              <View style={styles.usernameConteiner}>
+                <Text style={styles.usernameText}>{username}</Text>
+              </View>
+            </View>
+            <View style={styles.selector}>
+              <AnimatedPressable
+                style={[styles.selectorOption, backgroundStyleTr]}
+                onPress={() => selectorPressHandler("trips")}
+              >
+                <Animated.Text style={[styles.optionText, textStyleTr]}>
+                  Trips
+                </Animated.Text>
+              </AnimatedPressable>
+              <AnimatedPressable
+                style={[styles.selectorOption, backgroundStyleRev]}
+                onPress={() => selectorPressHandler("reviews")}
+              >
+                <Animated.Text style={[styles.optionText, textStyleRev]}>
+                  Reviews
+                </Animated.Text>
+              </AnimatedPressable>
+            </View>
           </View>
-          <View style={styles.usernameConteiner}>
-            <Text style={styles.usernameText}>{username}</Text>
-          </View>
-        </View>
-        <View style={styles.selector}>
-          <AnimatedPressable
-            style={[styles.selectorOption, backgroundStyleTr]}
-            onPress={() => handlePress("trips")}
-          >
-            <Animated.Text style={[styles.optionText, textStyleTr]}>
-              Trips
-            </Animated.Text>
-          </AnimatedPressable>
-          <AnimatedPressable
-            style={[styles.selectorOption, backgroundStyleRev]}
-            onPress={() => handlePress("reviews")}
-          >
-            <Animated.Text style={[styles.optionText, textStyleRev]}>
-              Reviews
-            </Animated.Text>
-          </AnimatedPressable>
-        </View>
-      </View>
+        </>
+      )}
+      {!isUserLogged && (
+        <RegistrationForm
+          accountCreatingFormInfo={accountCreatingFormInfo}
+          setAccountCreatingFormInfo={setAccountCreatingFormInfo}
+        />
+      )}
     </Background>
   );
 }
@@ -117,7 +158,7 @@ const styles = StyleSheet.create({
   },
   usernameText: {
     fontFamily: "Text",
-    fontSize: 30,
+    fontSize: 25,
     color: Colors.text,
     paddingVertical: 10,
   },

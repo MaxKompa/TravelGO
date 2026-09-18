@@ -66,3 +66,21 @@ export type ToolsListOptionProps = {
   title: string;
   handleOpenPress: () => void;
 };
+
+export type InfoForCreateAcc = {
+  username: string;
+  password: string;
+  email: string;
+};
+
+export type RegistrationFormProps = {
+  accountCreatingFormInfo: {
+    username: string;
+    email: string;
+    password: string;
+  };
+
+  setAccountCreatingFormInfo: React.Dispatch<
+    React.SetStateAction<{ username: string; email: string; password: string }>
+  >;
+};
