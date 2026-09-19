@@ -84,3 +84,7 @@ export type RegistrationFormProps = {
     React.SetStateAction<{ username: string; email: string; password: string }>
   >;
 };
+
+export type LogInFormProps = {
+  onClose: () => void;
+};

@@ -75,7 +75,7 @@ export default function Themes() {
         );
         return res;
       } catch (error) {
-        console.log("Request errror : ", error);
+        console.log("Request error : ", error);
         throw error;
       } finally {
         setIsLoading(false);
