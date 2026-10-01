@@ -1,4 +1,6 @@
+import { SetStateAction } from "react";
 import { DimensionValue, ImageSourcePropType } from "react-native";
+import { boolean } from "zod";
 
 export type HeaderProps = {
   text: string;
@@ -83,8 +85,14 @@ export type RegistrationFormProps = {
   setAccountCreatingFormInfo: React.Dispatch<
     React.SetStateAction<{ username: string; email: string; password: string }>
   >;
+
+  isUserLogged : boolean | null;
+  setIsUserLogged: React.Dispatch<React.SetStateAction<boolean | null>>;
 };
 
 export type LogInFormProps = {
   onClose: () => void;
+  isLogInOpen: boolean;
 };
+
+

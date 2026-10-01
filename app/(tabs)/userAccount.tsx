@@ -46,7 +46,7 @@ export default function userAccount() {
 
       checkAuth();
     }
-  }, [path]);
+  }, [path, isUserLogged]);
 
   // animation ----------------------------------------------------------
   const animProgres = useSharedValue(0);
@@ -126,6 +126,8 @@ export default function userAccount() {
         <RegistrationForm
           accountCreatingFormInfo={accountCreatingFormInfo}
           setAccountCreatingFormInfo={setAccountCreatingFormInfo}
+          isUserLogged = {isUserLogged}
+          setIsUserLogged = {setIsUserLogged}
         />
       )}
     </Background>
