@@ -88,6 +88,7 @@ export default function RegistrationForm({
           `Token successfully saved to AsyncStorage! Token: ${loggedToken}}`,
         );
       }
+      setIsLogInOpen(true);
     }
   };
   return (
