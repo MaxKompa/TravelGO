@@ -126,8 +126,8 @@ export default function userAccount() {
         <RegistrationForm
           accountCreatingFormInfo={accountCreatingFormInfo}
           setAccountCreatingFormInfo={setAccountCreatingFormInfo}
-          isUserLogged = {isUserLogged}
-          setIsUserLogged = {setIsUserLogged}
+          isUserLogged={isUserLogged}
+          setIsUserLogged={setIsUserLogged}
         />
       )}
     </Background>
