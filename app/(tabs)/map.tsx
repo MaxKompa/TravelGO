@@ -31,7 +31,6 @@ export default function MapScreen() {
         </View>
 
         <BottomSheetScrollView
-          showsVerticalScrollIndicator={true}
           style={styles.scrollView}
           contentContainerStyle={{
             paddingBottom: 70,

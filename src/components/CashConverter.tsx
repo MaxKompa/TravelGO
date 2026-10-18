@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import ContentCard from "../components/ContentCard";
 import { fetchRates } from "../services/ExchangeAPI";
@@ -17,6 +17,10 @@ export default function CashConverter() {
   const [rates, setRates] = useState<Record<string, number> | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  //ref for open the dropdown
+  const dropdown1Ref = useRef<any>(null);
+  const dropdown2Ref = useRef<any>(null);
 
   // loading rates from API (ExchcangeRate-API)
   useEffect(() => {
@@ -118,21 +122,33 @@ export default function CashConverter() {
           From:
         </Text>
         <View style={styles.inputWrapper}>
-          <Dropdown
-            data={options}
-            mode="default"
-            search
-            labelField={"label"}
-            valueField={"value"}
-            value={from}
-            maxHeight={400}
-            fontFamily="Text"
-            searchPlaceholder="Search..."
-            onChange={(item) => setFrom(item.value)}
-            style={styles.dropdown}
-            selectedTextStyle={{ fontFamily: "Text", fontSize: 18 }}
-            itemTextStyle={{ fontFamily: "Text", fontSize: 14 }}
-          />
+          <Pressable
+            onPress={() => dropdown1Ref.current?.open()}
+            hitSlop={{ top: 15, bottom: 15, left: 5, right: 5 }}
+            style={styles.pressableWrapper}
+          >
+            <Dropdown
+              ref={dropdown1Ref}
+              data={options}
+              mode="default"
+              search
+              labelField={"label"}
+              valueField={"value"}
+              value={from}
+              maxHeight={400}
+              fontFamily="Text"
+              searchPlaceholder="Search..."
+              onChange={(item) => setFrom(item.value)}
+              style={styles.dropdown}
+              selectedTextStyle={{
+                fontFamily: "Text",
+                fontSize: 18,
+                width: "100%",
+                height: "100%",
+              }}
+              itemTextStyle={{ fontFamily: "Text", fontSize: 14 }}
+            />
+          </Pressable>
           <TextInput
             value={amount}
             inputMode="decimal"
@@ -151,20 +167,27 @@ export default function CashConverter() {
           To:
         </Text>
         <View style={styles.inputWrapper}>
-          <Dropdown
-            data={options}
-            mode="default"
-            search
-            labelField="label"
-            valueField="value"
-            value={to}
-            maxHeight={400}
-            onChange={(item) => setTo(item.value)}
-            searchPlaceholder="Search..."
-            style={styles.dropdown}
-            selectedTextStyle={{ fontFamily: "Text", fontSize: 18 }}
-            itemTextStyle={{ fontFamily: "Text", fontSize: 14 }}
-          />
+          <Pressable
+            onPress={() => dropdown2Ref.current?.open()}
+            hitSlop={{ top: 15, bottom: 15, left: 5, right: 5 }}
+            style={styles.pressableWrapper}
+          >
+            <Dropdown
+              ref={dropdown2Ref}
+              data={options}
+              mode="default"
+              search
+              labelField="label"
+              valueField="value"
+              value={to}
+              maxHeight={400}
+              onChange={(item) => setTo(item.value)}
+              searchPlaceholder="Search..."
+              style={styles.dropdown}
+              selectedTextStyle={{ fontFamily: "Text", fontSize: 18 }}
+              itemTextStyle={{ fontFamily: "Text", fontSize: 14 }}
+            />
+          </Pressable>
           <TextInput
             value={result}
             editable={false} // Запрещает ручной ввод и вызов клавиатуры
@@ -209,22 +232,31 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Text",
   },
+
+  pressableWrapper: {
+    width: "30%",
+    height: "100%",
+    zIndex: 15,
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+  },
+
   dropdown: {
     height: "100%",
-    width: "30%",
+    width: "100%",
     borderRadius: 20,
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
     borderWidth: 2,
     alignSelf: "flex-start",
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    padding: 10,
+
+    paddingHorizontal: 10,
     zIndex: 2,
     backgroundColor: "white",
     borderColor: Colors.primary,
     fontFamily: "Text",
+    justifyContent: "center",
   },
   keyboardAwareView: {
     flex: 1,
