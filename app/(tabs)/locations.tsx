@@ -11,7 +11,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
-import { LocationListItem } from "../../src/types";
+import { LocationListItem, OperationHours } from "../../src/types";
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -45,6 +45,13 @@ export default function Locations() {
       return `${todayShedule?.day} : ${todayShedule?.open_time?.slice(0, 5)} - ${todayShedule?.close_time?.slice(0, 5)}`;
     };
 
+    // из общего обьекта hours достает обьект с нужными данными, передается в LocationCard, если расписание не указано отдает "нет фиксированного расписания"
+    const formattedFullSchedule: OperationHours[] = item.hours.map((item) => ({
+      day: item.day,
+      open_time: item.open_time ?? "No fixed hours",
+      close_time: item.close_time ?? "",
+    }));
+
     return (
       <LocationCard
         label={item.name}
@@ -54,6 +61,7 @@ export default function Locations() {
         photo_url={item.image_url}
         priceAvg={item.price_avg}
         id={item.id}
+        fullSchedule={formattedFullSchedule}
       />
     );
   };

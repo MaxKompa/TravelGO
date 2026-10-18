@@ -21,6 +21,12 @@ export type ThemeCardProps = {
   onPress: () => void;
 };
 
+export type OperationHours = {
+  day: string;
+  open_time?: string;
+  close_time?: string;
+};
+
 export type LocationCardProps = {
   label: string;
   rating: number;
@@ -29,6 +35,7 @@ export type LocationCardProps = {
   photo_url: string;
   priceAvg: number;
   id: number;
+  fullSchedule: OperationHours[];
 };
 
 export type LocationListItem = {
