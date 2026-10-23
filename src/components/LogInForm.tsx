@@ -1,5 +1,12 @@
 import { BlurView } from "expo-blur";
-import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import Animated, {
@@ -12,6 +19,7 @@ import { Colors } from "../theme";
 
 import { useEffect, useState } from "react";
 import { LogInFormProps } from "../types";
+import { setAccessToken, setIsLogged } from "../utils/AsyncStorage";
 
 export default function LogInForm({ onClose, isLogInOpen }: LogInFormProps) {
   const [loginData, setLoginData] = useState({
@@ -28,6 +36,8 @@ export default function LogInForm({ onClose, isLogInOpen }: LogInFormProps) {
   const cardStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: transformY.value }],
   }));
+
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     opacity.value = withTiming(1, { duration: 50 });
@@ -50,7 +60,10 @@ export default function LogInForm({ onClose, isLogInOpen }: LogInFormProps) {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify(loginData),
+        body: JSON.stringify({
+          email: loginData.email.trim(),
+          password: loginData.password.trim(),
+        }),
       });
 
       if (!response.ok) {
@@ -62,19 +75,33 @@ export default function LogInForm({ onClose, isLogInOpen }: LogInFormProps) {
       console.log(
         `Server response on Login : ${JSON.stringify(data, null, 2)}`,
       );
+
       return data;
     } catch (e: any) {
       console.log(`Login cannot be complete. ${e}`);
+
       Alert.alert(
-        "Registration failed.",
+        "Autorization failed.",
         e.message ||
           "Cannot connect to the server, check your internet connection.",
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleLoginPress = () => {
-    sendLoginData();
+  const handleLoginPress = async () => {
+    setIsLoading(true);
+    const userEntryData = await sendLoginData();
+    if (userEntryData) {
+      setIsLogged(true);
+      setAccessToken(userEntryData.access_token);
+      console.log(`Access Token: ${userEntryData.access_token}`);
+
+      console.log(
+        `Autorization of user ${userEntryData.username} finished successfully`,
+      );
+    }
   };
   return (
     <Animated.View
@@ -137,9 +164,13 @@ export default function LogInForm({ onClose, isLogInOpen }: LogInFormProps) {
                 style={styles.button}
                 onPress={() => handleLoginPress()}
               >
-                <Text style={{ fontFamily: "Text", fontSize: 20 }}>
-                  Sign In
-                </Text>
+                {isLoading ? (
+                  <ActivityIndicator color={"white"} size={"small"} />
+                ) : (
+                  <Text style={{ fontFamily: "Text", fontSize: 20 }}>
+                    Sign In
+                  </Text>
+                )}
               </Pressable>
             </View>
           </KeyboardAwareScrollView>

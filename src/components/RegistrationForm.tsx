@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {
+  ActivityIndicator,
   Alert,
   Pressable,
   StyleSheet,
@@ -26,8 +27,9 @@ export default function RegistrationForm({
   setAccountCreatingFormInfo,
 }: RegistrationFormProps) {
   const [isLogInOpen, setIsLogInOpen] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
   const sendRegisterData = async () => {
+    setIsLoading(true);
     try {
       const response = await fetch(
         "http://100.74.232.9:8000/api/auth/register",
@@ -37,7 +39,11 @@ export default function RegistrationForm({
             "Content-Type": "application/json",
             Accept: "application/json",
           },
-          body: JSON.stringify(accountCreatingFormInfo),
+          body: JSON.stringify({
+            username: accountCreatingFormInfo.username.trim(),
+            email: accountCreatingFormInfo.email.trim(),
+            password: accountCreatingFormInfo.password.trim(),
+          }),
         },
       );
 
@@ -62,6 +68,8 @@ export default function RegistrationForm({
         e.message ||
           "Cannot connect to the server, check your internet connection.",
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -87,8 +95,8 @@ export default function RegistrationForm({
         console.log(
           `Token successfully saved to AsyncStorage! Token: ${loggedToken}}`,
         );
+        setIsLogInOpen(true);
       }
-      setIsLogInOpen(true);
     }
   };
   return (
@@ -180,9 +188,15 @@ export default function RegistrationForm({
             style={styles.createAccButton}
             onPress={createButtonPressHandler}
           >
-            <Text style={[styles.text, { color: Colors.text2, fontSize: 20 }]}>
-              Create
-            </Text>
+            {isLoading ? (
+              <ActivityIndicator color="white" size="small" />
+            ) : (
+              <Text
+                style={[styles.text, { color: Colors.text2, fontSize: 20 }]}
+              >
+                Create
+              </Text>
+            )}
           </Pressable>
         </View>
       </View>
