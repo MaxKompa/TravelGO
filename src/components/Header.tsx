@@ -4,8 +4,9 @@ import { StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { HeaderProps } from "../../src/types";
 import AccountButton from "./AccountButton";
+import LogoutButton from "./LogoutButton";
 
-export default function Header({ text }: HeaderProps) {
+export default function Header({ text, setIsConfirmModalOpen }: HeaderProps) {
   const path = usePathname();
   const insets = useSafeAreaInsets();
 
@@ -20,7 +21,12 @@ export default function Header({ text }: HeaderProps) {
         <View style={styles.separator}></View>
         <Text style={styles.disc}>{text}</Text>
       </View>
-      {!path.includes("userAccount") && <AccountButton />}
+      {/* вот тут запилить логаут кнопку вместо иконки юзера  */}
+      {!path.includes("userAccount") ? (
+        <AccountButton />
+      ) : (
+        <LogoutButton setIsConfirmModalOpen={setIsConfirmModalOpen} />
+      )}
     </View>
   );
 }

@@ -97,7 +97,7 @@ export default function LogInForm({ onClose, isLogInOpen }: LogInFormProps) {
       setIsLogged(true);
       setAccessToken(userEntryData.access_token);
       console.log(`Access Token: ${userEntryData.access_token}`);
-
+      setIsLogged(true);
       console.log(
         `Autorization of user ${userEntryData.username} finished successfully`,
       );

@@ -1,4 +1,5 @@
 import Background from "@/src/components/Background";
+import ConfirmModal from "@/src/components/ConfirmModal";
 import Header from "@/src/components/Header";
 import RegistrationForm from "@/src/components/RegistrationForm";
 import { Colors } from "@/src/theme";
@@ -33,7 +34,7 @@ export default function userAccount() {
     "trips",
   );
   const [isUserLogged, setIsUserLogged] = useState<boolean | null>(false);
-
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   // проверка зарегестрирован ли юзер через asyncStorage
   useEffect(() => {
     if (path.includes("/userAccount")) {
@@ -87,7 +88,10 @@ export default function userAccount() {
     <Background>
       {isUserLogged && (
         <>
-          <Header text="Profile" />
+          <Header
+            text="Profile"
+            setIsConfirmModalOpen={setIsConfirmModalOpen}
+          />
           <View style={styles.contentWrapper}>
             <View style={styles.avatarWrapper}>
               <View style={styles.avatarBackground}>
@@ -120,6 +124,10 @@ export default function userAccount() {
               </AnimatedPressable>
             </View>
           </View>
+          <ConfirmModal
+            isConfirmModalOpen={isConfirmModalOpen}
+            setIsConfirmModalOpen={setIsConfirmModalOpen}
+          />
         </>
       )}
       {!isUserLogged && (

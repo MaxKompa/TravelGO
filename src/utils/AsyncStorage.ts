@@ -21,7 +21,7 @@ export const getIsLogged = async (): Promise<boolean> => {
   }
 };
 // сохранение идентификатора для бекенда
-export const setAccessToken = async (value: string) => {
+export const setAccessToken = async (value: string | null) => {
   try {
     await AsyncStorage.setItem(ACCESS_TOKEN, JSON.stringify(value));
   } catch (e) {

@@ -2,6 +2,7 @@ import { DimensionValue, ImageSourcePropType } from "react-native";
 
 export type HeaderProps = {
   text: string;
+  setIsConfirmModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export type ContentCardProps = {
@@ -99,4 +100,12 @@ export type RegistrationFormProps = {
 export type LogInFormProps = {
   onClose: () => void;
   isLogInOpen: boolean;
+};
+
+export type LogoutButtonProps = {
+  setIsConfirmModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export type ConfirmModalProps = {
+  isConfirmModalOpen: boolean;
 };
