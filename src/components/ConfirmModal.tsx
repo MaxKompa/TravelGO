@@ -2,34 +2,35 @@ import { useRouter } from "expo-router";
 import { useEffect } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
-    createAnimatedComponent,
-    useAnimatedStyle,
-    useSharedValue,
-    withSpring
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
 } from "react-native-reanimated";
+import { useAuthState } from "../store/useAuthState";
 import { Colors } from "../theme";
 import { ConfirmModalProps } from "../types";
-import { setAccessToken, setIsLogged } from "../utils/AsyncStorage";
-
-const AnimatedPressable = createAnimatedComponent(Pressable);
+import {
+  setAccessToken,
+  setIsLogged,
+  setUsername,
+} from "../utils/AsyncStorage";
 
 export default function ConfirmModal({
   isConfirmModalOpen,
   setIsConfirmModalOpen,
 }: ConfirmModalProps) {
+  //переадрессация
   const router = useRouter();
 
+  //logout из useAuthState
+  const logout = useAuthState((state) => state.logout);
+
+  // animation __________________________________________________
   const position = useSharedValue(-200);
 
   const animatedStyle = useAnimatedStyle(() => ({
     top: position.value,
   }));
-
-  const handleLogout = () => {
-    setIsLogged(false);
-    setAccessToken(null);
-    router.replace("/home");
-  };
 
   useEffect(() => {
     if (isConfirmModalOpen) {
@@ -44,6 +45,19 @@ export default function ConfirmModal({
       });
     }
   }, [isConfirmModalOpen]);
+  //____________________________________________________________
+
+  //функция выхода из аккаунта, очищение локального хранилища а так же стейта useAuthState
+  const handleLogout = () => {
+    //useAuthState
+    logout();
+
+    //asyncStorage
+    setIsLogged(false);
+    setAccessToken(null);
+    setUsername(null);
+    router.replace("/home");
+  };
 
   return (
     <Animated.View style={[styles.window, animatedStyle]}>
@@ -53,22 +67,22 @@ export default function ConfirmModal({
         Are you sure you want to sign out of your account?
       </Text>
       <View style={styles.buttonContainer}>
-        <AnimatedPressable style={[styles.button]}>
+        <Pressable style={[styles.button]}>
           <Text
             style={[styles.text, { color: "black", fontSize: 20 }]}
             onPress={() => handleLogout()}
           >
             Yes
           </Text>
-        </AnimatedPressable>
-        <AnimatedPressable
+        </Pressable>
+        <Pressable
           style={[styles.button]}
           onPress={() => setIsConfirmModalOpen(false)}
         >
           <Text style={[styles.text, { color: "black", fontSize: 20 }]}>
             No
           </Text>
-        </AnimatedPressable>
+        </Pressable>
       </View>
     </Animated.View>
   );

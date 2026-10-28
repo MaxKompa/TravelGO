@@ -2,9 +2,14 @@ import Background from "@/src/components/Background";
 import ConfirmModal from "@/src/components/ConfirmModal";
 import Header from "@/src/components/Header";
 import RegistrationForm from "@/src/components/RegistrationForm";
+import { useAuthState } from "@/src/store/useAuthState";
 import { Colors } from "@/src/theme";
 import { InfoForCreateAcc } from "@/src/types";
-import { getIsLogged } from "@/src/utils/AsyncStorage";
+import {
+  getAccessToken,
+  getIsLogged,
+  getUsername,
+} from "@/src/utils/AsyncStorage";
 import { usePathname } from "expo-router";
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
@@ -27,27 +32,48 @@ export default function userAccount() {
       email: "",
     });
   const path = usePathname();
-  const username = "ExampleUser123";
+  const username = useAuthState((state) => state.username);
   const [trips, setTrips] = useState([]);
   const [review, setReview] = useState([]);
   const [optionSelected, setOptionSelected] = useState<"trips" | "reviews">(
     "trips",
   );
-  const [isUserLogged, setIsUserLogged] = useState<boolean | null>(false);
+  const isUserLogged = useAuthState((state) => state.isLogged); //changed on Zustand method
+  const login = useAuthState((state) => state.login);
+  const logout = useAuthState((state) => state.logout);
+
+  //отрывающий стейт для модалки подтверждения выхода из аккаунта
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+
   // проверка зарегестрирован ли юзер через asyncStorage
   useEffect(() => {
     if (path.includes("/userAccount")) {
+      let result = false;
       const checkAuth = async () => {
         const asyncStorageResponse = await getIsLogged();
-        setIsUserLogged(asyncStorageResponse);
 
-        console.log(`Is user logged : ${isUserLogged}`);
+        //запись состояния залогиненного юзера в стор
+        if (asyncStorageResponse === true) {
+          const accessToken = await getAccessToken();
+          const username = await getUsername();
+
+          //тут в будущем сменить надписи на logout() что бы дать юзеру возможность залогиниться по новой и получить свой ключик на данное устройство
+          login(
+            accessToken ? accessToken : "User dont have an Access Token",
+            username ? username : "Guest",
+          );
+
+          result = true;
+        }
+
+        if (result) {
+          console.log("User logged in. Token and Username already exists.");
+        }
       };
 
       checkAuth();
     }
-  }, [path, isUserLogged]);
+  }, [path]);
 
   // animation ----------------------------------------------------------
   const animProgres = useSharedValue(0);
@@ -134,8 +160,6 @@ export default function userAccount() {
         <RegistrationForm
           accountCreatingFormInfo={accountCreatingFormInfo}
           setAccountCreatingFormInfo={setAccountCreatingFormInfo}
-          isUserLogged={isUserLogged}
-          setIsUserLogged={setIsUserLogged}
         />
       )}
     </Background>

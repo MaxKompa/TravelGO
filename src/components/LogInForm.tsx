@@ -18,14 +18,25 @@ import ClearButtonIcon from "../assets/icons/ClearButtonIcon.svg";
 import { Colors } from "../theme";
 
 import { useEffect, useState } from "react";
+import { useAuthState } from "../store/useAuthState";
 import { LogInFormProps } from "../types";
-import { setAccessToken, setIsLogged } from "../utils/AsyncStorage";
+import {
+  setAccessToken,
+  setIsLogged,
+  setUsername,
+} from "../utils/AsyncStorage";
 
 export default function LogInForm({ onClose, isLogInOpen }: LogInFormProps) {
+  //логин из стейта Zustand (UseAuthState)
+  const login = useAuthState((state) => state.login);
+
+  //данные введенные в форму логина
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
   });
+
+  //animation ________________________________________________________________
   const opacity = useSharedValue(0);
   const blurStyle = useAnimatedStyle(() => ({
     opacity: withTiming(opacity.value, { duration: 400 }),
@@ -51,7 +62,8 @@ export default function LogInForm({ onClose, isLogInOpen }: LogInFormProps) {
       onClose();
     }, 500);
   };
-
+  //________________________________________________________________
+  // отправка данных для проверки существует ли юзер
   const sendLoginData = async () => {
     try {
       const response = await fetch("http://100.74.232.9:8000/api/auth/login", {
@@ -90,14 +102,23 @@ export default function LogInForm({ onClose, isLogInOpen }: LogInFormProps) {
     }
   };
 
+  // вызов функции отправки при нажатии, запись данных в AcyncStorage и в Стор useAuthState
   const handleLoginPress = async () => {
     setIsLoading(true);
     const userEntryData = await sendLoginData();
     if (userEntryData) {
-      setIsLogged(true);
-      setAccessToken(userEntryData.access_token);
-      console.log(`Access Token: ${userEntryData.access_token}`);
-      setIsLogged(true);
+      //useAuthState
+      login(userEntryData.access_token, userEntryData.username);
+
+      //AsyncStorage
+      await setIsLogged(true);
+      await setAccessToken(userEntryData.access_token);
+      await setUsername(userEntryData.username);
+
+      //Логи подтверждения сохранения
+      console.log(
+        `Access Token in AsyncStorage: ${userEntryData.access_token}`,
+      );
       console.log(
         `Autorization of user ${userEntryData.username} finished successfully`,
       );

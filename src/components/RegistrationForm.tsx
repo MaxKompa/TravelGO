@@ -26,8 +26,12 @@ export default function RegistrationForm({
   accountCreatingFormInfo,
   setAccountCreatingFormInfo,
 }: RegistrationFormProps) {
+  //открыто ли окно логин
   const [isLogInOpen, setIsLogInOpen] = useState(false);
+  //стейт лоадера
   const [isLoading, setIsLoading] = useState(false);
+
+  // отправка всех данных на бек для верификации и добавления в бд
   const sendRegisterData = async () => {
     setIsLoading(true);
     try {
@@ -56,7 +60,7 @@ export default function RegistrationForm({
       }
 
       const allData = await response.json();
-      const accessToken = allData.access_token;
+      const accessToken = allData.access_token; //вернул ацесстокен
       console.log(
         `Register server response: \n ${JSON.stringify(allData, null, 2)}`,
       );

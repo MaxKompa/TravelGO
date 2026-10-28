@@ -1,10 +1,9 @@
-import { useRouter } from "expo-router";
 import { Pressable, StyleSheet, Text } from "react-native";
 import Animated, {
-    useAnimatedStyle,
-    useSharedValue,
-    withSequence,
-    withTiming,
+  useAnimatedStyle,
+  useSharedValue,
+  withSequence,
+  withTiming,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import LogoutButtonIcon from "../assets/icons/LogoutButton.svg";
@@ -13,12 +12,7 @@ import { LogoutButtonProps } from "../types";
 export default function LogoutButton({
   setIsConfirmModalOpen,
 }: LogoutButtonProps) {
-  const router = useRouter();
   const insets = useSafeAreaInsets();
-
-  const navigateToHome = () => {
-    router.replace("/home");
-  };
 
   //animation
   const scale = useSharedValue(1);
