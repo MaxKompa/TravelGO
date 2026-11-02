@@ -1,3 +1,5 @@
+import { useAuthState } from "@/src/store/useAuthState";
+import { getAccessToken, getUsername } from "@/src/utils/AsyncStorage";
 import { Asset } from "expo-asset";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
@@ -25,7 +27,7 @@ const carouselImages = [
 
 export default function RootLayout() {
   const [imagesLoaded, setImagesLoaded] = useState(false);
-
+  //Шрифты
   const [fontsLoaded, fontError] = useFonts({
     "Agbalumo-Regular": require("../src/assets/fonts/Agbalumo-Regular.ttf"),
     "Merienda-Bold": require("../src/assets/fonts/Merienda-Bold.ttf"),
@@ -35,6 +37,37 @@ export default function RootLayout() {
     Text: require("../src/assets/fonts/Outfit-Regular.ttf"),
   });
 
+  // проверка зарегестрирован ли юзер через asyncStorage, перенос состояния логирования в useAuthState
+  const login = useAuthState((state) => state.login);
+  useEffect(() => {
+    let result = false;
+    const checkAuth = async () => {
+      const asyncStorageResponseAT = await getAccessToken();
+      const asyncStorageResponseUN = await getUsername();
+
+      //запись состояния залогиненного юзера в стор
+      if (asyncStorageResponseAT && asyncStorageResponseUN) {
+        const accessToken = asyncStorageResponseAT;
+        const username = asyncStorageResponseUN;
+
+        //тут в будущем сменить надписи на logout() что бы дать юзеру возможность залогиниться по новой и получить свой ключик на данное устройство
+        login(accessToken, username);
+
+        result = true;
+      }
+
+      if (result) {
+        console.log("User logged in. Token and Username already exists.");
+      } else {
+        console.log(
+          "Something went wrong account data had missed. you need to logIn.",
+        );
+      }
+    };
+
+    checkAuth();
+  }, []);
+  //Загрузка изображений при входе в приложение
   useEffect(() => {
     async function loadResources() {
       try {

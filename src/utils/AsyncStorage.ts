@@ -1,27 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const IS_USER_LOGGED_IN_KEY = "is_user_logged_in";
 const USERNAME = "user_name";
 const ACCESS_TOKEN = "access_token";
 // сохранения статуса входа в аккаунт
-export const setIsLogged = async (value: boolean) => {
-  try {
-    await AsyncStorage.setItem(IS_USER_LOGGED_IN_KEY, JSON.stringify(value));
-  } catch (e) {
-    console.error(`IS LOGGED SET STATUS ERROR: ${e}`);
-  }
-};
-
-//проверка статуса входа в аккаунт
-export const getIsLogged = async (): Promise<boolean> => {
-  try {
-    const value = await AsyncStorage.getItem(IS_USER_LOGGED_IN_KEY);
-    return value ? JSON.parse(value) : false;
-  } catch (e) {
-    console.error(`IS LOGGED GET STATUS ERROR ${e}`);
-    return false;
-  }
-};
 
 // сохранение токен-идентификатора для бекенда
 export const setAccessToken = async (value: string | null) => {
@@ -43,7 +24,7 @@ export const getAccessToken = async (): Promise<string | false> => {
   }
 };
 
-export const setUsername = async (name: string) => {
+export const setUsername = async (name: string | null) => {
   try {
     await AsyncStorage.setItem(USERNAME, JSON.stringify(name));
   } catch (e) {

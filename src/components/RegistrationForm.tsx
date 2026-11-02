@@ -99,6 +99,12 @@ export default function RegistrationForm({
         console.log(
           `Token successfully saved to AsyncStorage! Token: ${loggedToken}}`,
         );
+        //обнуление полей ввода
+        setAccountCreatingFormInfo(() => ({
+          password: "",
+          username: "",
+          email: "",
+        }));
         setIsLogInOpen(true);
       }
     }

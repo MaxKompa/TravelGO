@@ -2,7 +2,6 @@ import { DimensionValue, ImageSourcePropType } from "react-native";
 
 export type HeaderProps = {
   text: string;
-  setIsConfirmModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export type ContentCardProps = {
@@ -91,6 +90,11 @@ export type UserInfoState = {
 
 export type CurrentTripInfoState = {
   selectedLocations: LocationListItem[];
+  places: LocationListItem[];
+
+  setPlaces: (fetchedPlaces: LocationListItem[]) => void;
+  addLocation: (newLocation: LocationListItem) => void;
+  removeLocation: (removableId: number) => void;
 };
 
 export type LocationListItem = {
@@ -118,4 +122,8 @@ export type LocationCardProps = {
   priceAvg: number;
   id: number;
   fullSchedule: OperationHours[];
+};
+
+export type addButtonProp = {
+  cardId: number;
 };

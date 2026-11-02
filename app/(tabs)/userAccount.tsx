@@ -5,13 +5,7 @@ import RegistrationForm from "@/src/components/RegistrationForm";
 import { useAuthState } from "@/src/store/useAuthState";
 import { Colors } from "@/src/theme";
 import { InfoForCreateAcc } from "@/src/types";
-import {
-  getAccessToken,
-  getIsLogged,
-  getUsername,
-} from "@/src/utils/AsyncStorage";
-import { usePathname } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
   createAnimatedComponent,
@@ -31,7 +25,7 @@ export default function userAccount() {
       password: "",
       email: "",
     });
-  const path = usePathname();
+
   const username = useAuthState((state) => state.username);
   const [trips, setTrips] = useState([]);
   const [review, setReview] = useState([]);
@@ -39,41 +33,9 @@ export default function userAccount() {
     "trips",
   );
   const isUserLogged = useAuthState((state) => state.isLogged); //changed on Zustand method
-  const login = useAuthState((state) => state.login);
-  const logout = useAuthState((state) => state.logout);
 
   //отрывающий стейт для модалки подтверждения выхода из аккаунта
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-
-  // проверка зарегестрирован ли юзер через asyncStorage
-  useEffect(() => {
-    if (path.includes("/userAccount")) {
-      let result = false;
-      const checkAuth = async () => {
-        const asyncStorageResponse = await getIsLogged();
-
-        //запись состояния залогиненного юзера в стор
-        if (asyncStorageResponse === true) {
-          const accessToken = await getAccessToken();
-          const username = await getUsername();
-
-          //тут в будущем сменить надписи на logout() что бы дать юзеру возможность залогиниться по новой и получить свой ключик на данное устройство
-          login(
-            accessToken ? accessToken : "User dont have an Access Token",
-            username ? username : "Guest",
-          );
-
-          result = true;
-        }
-
-        if (result) {
-          console.log("User logged in. Token and Username already exists.");
-        }
-      };
-
-      checkAuth();
-    }
-  }, [path]);
 
   // animation ----------------------------------------------------------
   const animProgres = useSharedValue(0);
@@ -112,12 +74,14 @@ export default function userAccount() {
 
   return (
     <Background>
-      {isUserLogged && (
+      {!isUserLogged ? (
+        <RegistrationForm
+          accountCreatingFormInfo={accountCreatingFormInfo}
+          setAccountCreatingFormInfo={setAccountCreatingFormInfo}
+        />
+      ) : (
         <>
-          <Header
-            text="Profile"
-            setIsConfirmModalOpen={setIsConfirmModalOpen}
-          />
+          <Header text="Profile" />
           <View style={styles.contentWrapper}>
             <View style={styles.avatarWrapper}>
               <View style={styles.avatarBackground}>
@@ -155,12 +119,6 @@ export default function userAccount() {
             setIsConfirmModalOpen={setIsConfirmModalOpen}
           />
         </>
-      )}
-      {!isUserLogged && (
-        <RegistrationForm
-          accountCreatingFormInfo={accountCreatingFormInfo}
-          setAccountCreatingFormInfo={setAccountCreatingFormInfo}
-        />
       )}
     </Background>
   );

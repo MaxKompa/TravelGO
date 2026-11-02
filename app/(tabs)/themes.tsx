@@ -1,5 +1,6 @@
 import Background from "@/src/components/Background";
 import ThemeCard from "@/src/components/ThemeCard";
+import { useTripState } from "@/src/store/useTripState";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { ActivityIndicator, Alert, StyleSheet, View } from "react-native";
@@ -12,6 +13,8 @@ import Animated, {
 import Header from "../../src/components/Header";
 
 export default function Themes() {
+  const addSearchedPlaces = useTripState((state) => state.setPlaces);
+
   const [isLoading, setIsLoading] = useState(false);
 
   const themeImages = {
@@ -22,7 +25,7 @@ export default function Themes() {
     history: require("@/src/assets/images/historyPic.jpg"),
   };
 
-  const { country, city, theme, startTrip, endTrip } = useLocalSearchParams();
+  const { country, city, startTrip, endTrip } = useLocalSearchParams();
   const router = useRouter();
 
   const handleSelectTheme = async (selectedTheme: string) => {
@@ -48,17 +51,14 @@ export default function Themes() {
     const sendTripData = async (fullTripData: object) => {
       setIsLoading(true);
       try {
-        const response = await fetch(
-          "http://100.74.232.9:8000/api/plan-trip ",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-            },
-            body: JSON.stringify(fullTripData),
+        const response = await fetch("http://100.74.232.9:8000/api/plan-trip", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
           },
-        );
+          body: JSON.stringify(fullTripData),
+        });
 
         if (!response.ok) {
           throw new Error(`Server error : ${response.status} `);
@@ -69,6 +69,7 @@ export default function Themes() {
         );
 
         const res = await response.json();
+        addSearchedPlaces(res);
         console.log(
           "Succesfuly server response: ",
           JSON.stringify(res, null, 2),
@@ -92,19 +93,14 @@ export default function Themes() {
       const listData = await sendTripData(fullTripData);
 
       if (listData) {
-        router.push({
-          pathname: "/locations",
-          params: {
-            listData: JSON.stringify(listData),
-          },
-        });
+        router.push("/locations");
       }
     } catch (err) {
       Alert.alert("Error", "Could not fetch trip data from the server.");
     }
   };
 
-  // //анимация появления
+  //анимация появления
   const opacity0 = useSharedValue(0);
   const opacity1 = useSharedValue(0);
   const opacity2 = useSharedValue(0);

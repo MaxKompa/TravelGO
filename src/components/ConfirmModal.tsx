@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { usePathname } from "expo-router";
 import { useEffect } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
@@ -9,19 +9,22 @@ import Animated, {
 import { useAuthState } from "../store/useAuthState";
 import { Colors } from "../theme";
 import { ConfirmModalProps } from "../types";
-import {
-  setAccessToken,
-  setIsLogged,
-  setUsername,
-} from "../utils/AsyncStorage";
+import { setAccessToken, setUsername } from "../utils/AsyncStorage";
 
 export default function ConfirmModal({
   isConfirmModalOpen,
   setIsConfirmModalOpen,
 }: ConfirmModalProps) {
   //переадрессация
-  const router = useRouter();
 
+  const path = usePathname();
+
+  //если закрыт компонент - модалка закрывается
+  useEffect(() => {
+    if (!path.includes("/userAccount")) {
+      setIsConfirmModalOpen(false);
+    }
+  }, [path]);
   //logout из useAuthState
   const logout = useAuthState((state) => state.logout);
 
@@ -53,10 +56,8 @@ export default function ConfirmModal({
     logout();
 
     //asyncStorage
-    setIsLogged(false);
     setAccessToken(null);
     setUsername(null);
-    router.replace("/home");
   };
 
   return (

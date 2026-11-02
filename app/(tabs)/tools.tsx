@@ -3,6 +3,7 @@ import CashConverter from "@/src/components/CashConverter";
 import Header from "@/src/components/Header";
 import ToolsListOption from "@/src/components/ToolsListOption";
 import Translator from "@/src/components/Translator";
+import TripCost from "@/src/components/TripCost";
 import { Colors } from "@/src/theme";
 import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import { useCallback, useMemo, useRef, useState } from "react";
@@ -41,11 +42,7 @@ export default function ToolsMenu() {
   const renderBottomPage = () => {
     switch (selectedPage) {
       case "tripCost":
-        return (
-          <Text style={{ alignSelf: "center", fontSize: 20 }}>
-            Trip Cost page!
-          </Text>
-        );
+        return <TripCost />;
       case "translator":
         return <Translator />;
       case "localLaws":

@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -29,11 +29,7 @@ export default function LogoutButton({
     transform: [{ scale: scale.value }],
   }));
 
-  const isCustomAvatarExists = false; // нужно сделать подключение своей аватарки
-
-  const avatarIcon = isCustomAvatarExists ? (
-    <Text style={{ color: "white" }}>Custom avatar img!!</Text>
-  ) : (
+  const logoutIcon = (
     <LogoutButtonIcon color={"#e00909"} height={25} width={25} />
   );
 
@@ -45,7 +41,7 @@ export default function LogoutButton({
         { top: insets.top + 5 },
       ]}
     >
-      <Pressable onPress={handlePress}>{avatarIcon}</Pressable>
+      <Pressable onPress={handlePress}>{logoutIcon}</Pressable>
     </Animated.View>
   );
 }

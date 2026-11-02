@@ -1,10 +1,11 @@
 import Background from "@/src/components/Background";
 import Header from "@/src/components/Header";
 import LocationCard from "@/src/components/LocationCard";
+import { useTripState } from "@/src/store/useTripState";
 import { Colors } from "@/src/theme";
 import { BlurView } from "expo-blur";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useMemo } from "react";
+import { useRouter } from "expo-router";
+import { useEffect } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -28,12 +29,15 @@ const DAYS_OF_WEEK = [
 
 export default function Locations() {
   const router = useRouter();
-  const { listData } = useLocalSearchParams();
+  const locationList = useTripState((state) => state.places);
 
-  const locationList: LocationListItem[] = useMemo(
-    () => (listData ? JSON.parse(listData as string) : []),
-    [listData],
-  );
+  const selectedPlaces = useTripState((state) => state.selectedLocations);
+
+  useEffect(() => {
+    console.log(
+      `Updated list of selected places: ${JSON.stringify(selectedPlaces, null, 2)}`,
+    );
+  }, [selectedPlaces]);
 
   //функция для рендера LocationCard в FlatList
   const renderItem = ({ item }: { item: LocationListItem }) => {

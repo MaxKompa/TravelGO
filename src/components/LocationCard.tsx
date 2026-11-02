@@ -139,7 +139,7 @@ export default function LocationCard({
           </Pressable>
         </View>
         <View style={styles.buttonArea}>
-          <AddButton />
+          <AddButton cardId={id} />
         </View>
       </Animated.View>
     </Animated.View>

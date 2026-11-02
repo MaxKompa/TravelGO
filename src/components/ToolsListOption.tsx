@@ -83,5 +83,7 @@ const styles = StyleSheet.create({
 
   elementTitle: {
     fontSize: 17,
+    fontFamily: "Text",
+    color: Colors.text3,
   },
 });

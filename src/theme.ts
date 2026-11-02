@@ -9,4 +9,5 @@ export const Colors = {
   primaryBlured: "#004fce69",
   text: "#0000006b",
   text2: "#090527a6",
+  text3: "#000000bd",
 };
