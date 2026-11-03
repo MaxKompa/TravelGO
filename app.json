@@ -43,7 +43,13 @@
       ],
       "@react-native-community/datetimepicker",
       "expo-asset",
-      "@rnmapbox/maps"
+
+      [
+        "@rnmapbox/maps",
+        {
+          "accessToken": "pk.eyJ1IjoiZGFuaWRldjIwMDYiLCJhIjoiY212eTluZXhzMHBjaDJ4c2Y3eHdpZmpkbSJ9.MbTFtJUSXXvDpjCwpB_x5g"
+        }
+      ]
     ]
   }
 }

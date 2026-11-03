@@ -41,7 +41,7 @@ export default function LogoutButton({
         { top: insets.top + 5 },
       ]}
     >
-      <Pressable onPress={handlePress}>{logoutIcon}</Pressable>
+      <Pressable onPress={() => handlePress()}>{logoutIcon}</Pressable>
     </Animated.View>
   );
 }

@@ -20,11 +20,7 @@ import { Colors } from "../theme";
 import { useEffect, useState } from "react";
 import { useAuthState } from "../store/useAuthState";
 import { LogInFormProps } from "../types";
-import {
-  setAccessToken,
-  setIsLogged,
-  setUsername,
-} from "../utils/AsyncStorage";
+import { setAccessToken, setUsername } from "../utils/AsyncStorage";
 
 export default function LogInForm({ onClose, isLogInOpen }: LogInFormProps) {
   //логин из стейта Zustand (UseAuthState)
@@ -111,7 +107,7 @@ export default function LogInForm({ onClose, isLogInOpen }: LogInFormProps) {
       login(userEntryData.access_token, userEntryData.username);
 
       //AsyncStorage
-      await setIsLogged(true);
+
       await setAccessToken(userEntryData.access_token);
       await setUsername(userEntryData.username);
 

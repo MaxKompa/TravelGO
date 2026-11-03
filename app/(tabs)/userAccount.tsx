@@ -1,11 +1,12 @@
 import Background from "@/src/components/Background";
 import ConfirmModal from "@/src/components/ConfirmModal";
 import Header from "@/src/components/Header";
+import LogoutButton from "@/src/components/LogoutButton";
 import RegistrationForm from "@/src/components/RegistrationForm";
 import { useAuthState } from "@/src/store/useAuthState";
 import { Colors } from "@/src/theme";
 import { InfoForCreateAcc } from "@/src/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
   createAnimatedComponent,
@@ -26,14 +27,13 @@ export default function userAccount() {
       email: "",
     });
 
-  const username = useAuthState((state) => state.username);
   const [trips, setTrips] = useState([]);
   const [review, setReview] = useState([]);
   const [optionSelected, setOptionSelected] = useState<"trips" | "reviews">(
     "trips",
   );
   const isUserLogged = useAuthState((state) => state.isLogged); //changed on Zustand method
-
+  const username = useAuthState((state) => state.username);
   //отрывающий стейт для модалки подтверждения выхода из аккаунта
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
@@ -72,6 +72,11 @@ export default function userAccount() {
   };
   //---------------------------------------------
 
+  //Выключение модалки при логине/логауте
+  useEffect(() => {
+    setIsConfirmModalOpen(false);
+  }, [isUserLogged]);
+
   return (
     <Background>
       {!isUserLogged ? (
@@ -82,6 +87,9 @@ export default function userAccount() {
       ) : (
         <>
           <Header text="Profile" />
+
+          <LogoutButton setIsConfirmModalOpen={setIsConfirmModalOpen} />
+
           <View style={styles.contentWrapper}>
             <View style={styles.avatarWrapper}>
               <View style={styles.avatarBackground}>
