@@ -25,6 +25,7 @@ export default function ConfirmModal({
       setIsConfirmModalOpen(false);
     }
   }, [path]);
+
   //logout из useAuthState
   const logout = useAuthState((state) => state.logout);
 
@@ -52,6 +53,7 @@ export default function ConfirmModal({
 
   //функция выхода из аккаунта, очищение локального хранилища а так же стейта useAuthState
   const handleLogout = () => {
+    setIsConfirmModalOpen(false);
     //useAuthState
     logout();
 

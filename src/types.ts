@@ -127,3 +127,10 @@ export type LocationCardProps = {
 export type addButtonProp = {
   cardId: number;
 };
+
+export type NavButtonProps = {
+  buttonType: string;
+  height: number;
+  width: number;
+  setTripMethod: React.Dispatch<React.SetStateAction<string>>;
+};

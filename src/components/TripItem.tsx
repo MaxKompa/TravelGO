@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from "react-native";
 import { Colors } from "../theme";
 
-export default function TripItem() {
+export default function TripItem(props: { itemName: string }) {
   return (
     <View style={styles.itemConteiner}>
       <View style={styles.itemLabel}>
         <Text
           style={{ fontFamily: "Text", textAlign: "center", color: "white" }}
         >
-          Example label
+          {props.itemName}
         </Text>
       </View>
     </View>
