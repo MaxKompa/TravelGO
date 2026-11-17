@@ -8,6 +8,7 @@ class TripRequest(BaseModel):
     start_datetime: datetime
     end_datetime: datetime
     theme: str
+    user_location: Optional[str] = "UTC"
 
 class OpenHourSchema(BaseModel):
     day: str
@@ -60,3 +61,21 @@ class LawResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class EventRequest(BaseModel):
+    city: str
+    start_date: Optional[str] = None # Формат "2026-11-20"
+    end_date: Optional[str] = None   # Формат "2026-11-25"
+
+class EventResponse(BaseModel):
+    id: str
+    name: str
+    category: str
+    date: str
+    time: str
+    venue: str
+    image_url: str
+    price_min: float
+    ticket_url: str
+    latitude: float
+    longitude: float
